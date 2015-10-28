@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<string.h>
+//accept
 /*test case
  * 1
  * 10
@@ -132,9 +133,8 @@ int main()
 			update(1, 1, hook_num);
 		}
 		ql=1;qr=hook_num;
-		_sum = 0;
 		query(1, 1, hook_num);
-		printf("Case %d: The total value of the hook is %d.\n",i+1,_sum);
+		printf("Case %d: The total value of the hook is %d.\n",i+1,sum[1]);
 		
 	}
     	return 0;

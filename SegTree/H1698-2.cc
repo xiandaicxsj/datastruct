@@ -9,6 +9,7 @@
  * 5 9 3
  * Result: 24
  * passed h1698
+ * a lot of error is cause by printf
  */
 #define LL(node) ( 2 * node )
 #define RR(node) ( 2 * node + 1)
@@ -133,9 +134,8 @@ int main()
 			update(1, 1, hook_num);
 		}
 		ql=1;qr=hook_num;
-		_sum = 0;
 		query(1, 1, hook_num);
-		printf("Case %d: The total value of the hook is %d.\n",i+1,_sum);
+		printf("Case %d: The total value of the hook is %d.\n",i+1,sum[1]);
 		
 	}
     	return 0;
