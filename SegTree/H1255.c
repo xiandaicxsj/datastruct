@@ -26,45 +26,46 @@ int cmp_int(const void *_x, const void *_y)
 {
 	return *((float *)_x) > *((float *)_y);
 }
-int maintain(int o, int l, int r)
-{
-	if ( val[o] > 1)
-	sum[o] =  y[r] - y[l];
-	else
-	{
-		sum[o] = sum[2*o] + sum[2*o+1];
-		printf("sum l %d, r %d is %f\n", l,r, sum[o]);
-	}
-}
 void pass_down(int o)
 {
 	val[o*2] = val[o*2+1] = val[o];
 	val[o] = 0;
 }
-void  update(int o, int l, int r)
+void down(int o, int l, int r)
 {
-	printf("l %d: %f --- r %d:%f\n", l, y[l], r, y[r]);
-	if(y[l] >= ql && y[r] <= qr)
+	if (l+1 == r)	
 	{
 		val[o] += value;
-		if (val[o]>1)
-			printf("for val > 1 l %d: %f --- r %d:%f\n", l, y[l], r, y[r]);
-		printf("maintain\n");
-		maintain(o, l, r);
+		if (val[o] >= 2)
+		{	
+			sum[o] = y[r] - y[l];
+			return ;
+		}
+		if (val[o] < 0)
+			val[o] = 0;
+		sum[o] = o;
 		return ;
 	}
-	if (val[o])
-		pass_down(o);
+	int m = (l + r)>>1;
+	down(2*o, l, m);
+	down(2*o+1,m, r);
+	sum[o] = sum[2*o] + sum[2*o+1];
+}
+void  update(int o, int l, int r)
+{
+	printf(" l %d:%f, r%d:%f\n", l,y[l],r,y[r]);
+	if(ql <= y[l] && y[r] <= qr)
+	{
+		down(o, l, r);
+		return ;
+	}
 	int m = (l + r) >> 1;	
 	if (ql < y[m])
 		update(o*2, l, m);
 	else
-		maintain(o*2, l, m);
 	if (qr > y[m] )
-		update(o*2+1, m, r);
-	else 
-		maintain(o*2+1, m, r);
-	maintain(o, l, r);
+		update(o*2, m, r);
+	sum[o] = sum[2*o] + sum[2*o+1];
 }
 void show (int o, int l ,int r)
 {
@@ -107,6 +108,7 @@ int main()
 			tmp[k]=y2;
 			k++;
 		}
+		printf("qsort\n");
 		qsort((void *)(&line[1]), k-1, sizeof(struct ele_line),cmp_line);//sort line by x1 
 		qsort((void *)(&tmp[1]), k, sizeof(float), cmp_int);
 		y[1]=tmp[1];
@@ -126,6 +128,8 @@ int main()
 		{
 			printf("line x1:%f, y1:%f, y2:%f value %d\n", line[j].x1, line[j].y1, line[j].y2, line[j].value);
 		}
+		printf("after qsort\n");
+		return 0;
 		float area=0;
 		val[1] = 0;
 		int ii;
