@@ -1,5 +1,5 @@
 #include<stdio.h>
-#include<algorithm>
+#include<stdlib.h>
 #define N 20000
 int val[N] = {0};
 int sum[N] = {0};
@@ -16,9 +16,15 @@ struct ele_line
 	int value;
 };
 struct ele_line line[N];
-bool cmp(struct ele_line x, struct ele_line y)
+int cmp_line(const void *_x, const void *_y)
 {
-	return x.x1 > y.x1; 
+	struct ele_line *x= (struct ele_line *)_x;
+	struct ele_line *y= (struct ele_line *)_y;
+	return x->x1 > y->x1; 
+}
+int cmp_int(const void *_x, const void *_y)
+{
+	return *((int *)_x) > *((int *)_y);
 }
 int maintain(int o, int l, int r)
 {
@@ -59,6 +65,7 @@ int main()
 	int test_case = 0;
 	scanf("%d", &test_case);
 	int k=0;
+	int i=0;
 	for (int i=0 ; i< test_case ;i++)
 	{
 	
@@ -66,7 +73,8 @@ int main()
 		int num_s = 0;
 		scanf("%d",&num_s);
 		k = 1;
-		for(int j=0; j< num_s; j++)
+		int j=0;
+		for(j=0; j< num_s; j++)
 		{
 			scanf("%d%d%d%d", &x1, &y1, &x2, &y2);
 			line[k].x1 = x1;
@@ -82,11 +90,11 @@ int main()
 			tmp[k]=y2;
 			k++;
 		}
-		sort(line+1, line + k, cmp);//sort line by x1 
-		sort(tmp+1, tmp + k);
+		qsort((void *)(&line[1]), k, sizeof(struct ele_line),cmp_line);//sort line by x1 
+		qsort((void *)(&tmp[1]), k, sizeof(int), cmp_int);
 		y[1]=tmp[1];
 		int n=0;
-		for (int j=2; j < k; j++)	
+		for (j=2; j < k; j++)	
 		{
 			if(tmp[i] == tmp[i-1])
 			continue;	
