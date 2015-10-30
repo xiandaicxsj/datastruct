@@ -9,7 +9,8 @@ int get_len(int length, int * begin, int * end)
 	tmp[0]=array[0];
 	begin[0]=0;
 	int max=tmp[0];
-	for (int i=1; i< length; i++)
+	int i=1;
+	for (; i< length; i++)
 	{
 		if (tmp[i-1] + array[i] >= array[i])
 		{
@@ -44,15 +45,11 @@ int main()
 		int e;
 		int m;
 		scanf("%d",&l);
-		printf("end %d %d\n",i, kk_case);
 		for(j = 0;j<l;j++)
 			scanf("%d", &(array[j]));
-		printf("end %d %d\n",i, kk_case);
 		m = get_len(l, &b, &e);
-		printf("end %d %d\n",i, kk_case);
 		printf("Case %d:\n",i+1); 
 		printf("%d %d %d\n",m, b, e);
-		printf("end %d %d\n",i, kk_case);
 	}
 	return 0;
 }

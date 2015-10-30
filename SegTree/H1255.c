@@ -33,44 +33,48 @@ void pass_down(int o)
 }
 void down(int o, int l, int r)
 {
+	//printf("down--> l %d:%f, r%d:%f\n", l,y[l],r,y[r]);
 	if (l+1 == r)	
 	{
 		val[o] += value;
 		if (val[o] >= 2)
 		{	
 			sum[o] = y[r] - y[l];
+			//printf(" val[%d] %d value %d\n",o, val[o], value);
+		//	printf("down update--> l %d:%f, r%d:%f sum %f\n", l,y[l],r,y[r], sum[o]);
 			return ;
 		}
 		if (val[o] < 0)
 			val[o] = 0;
-		sum[o] = o;
+		sum[o] = 0;
 		return ;
 	}
 	int m = (l + r)>>1;
 	down(2*o, l, m);
 	down(2*o+1,m, r);
 	sum[o] = sum[2*o] + sum[2*o+1];
+	//printf("down--> l %d:%f, r%d:%f sum %f\n", l,y[l],r,y[r], sum[o]);
 }
 void  update(int o, int l, int r)
 {
-	printf(" l %d:%f, r%d:%f\n", l,y[l],r,y[r]);
+	//nprintf("update->> l %d:%f, r%d:%f\n", l,y[l],r,y[r]);
 	if(ql <= y[l] && y[r] <= qr)
 	{
+		//printf("down begin l %d:%f, r%d:%f\n", l,y[l],r,y[r]);
 		down(o, l, r);
 		return ;
 	}
 	int m = (l + r) >> 1;	
 	if (ql < y[m])
 		update(o*2, l, m);
-	else
 	if (qr > y[m] )
-		update(o*2, m, r);
+		update(o*2+1, m, r);
 	sum[o] = sum[2*o] + sum[2*o+1];
 }
 void show (int o, int l ,int r)
 {
 	
-	printf("l%d--%f, r%d--%f sum is %f\n",l,y[l], r,y[r], sum[o]);
+	//printf("node %d :l%d--%f, r%d--%f sum is %f value is %d\n",o, l,y[l], r,y[r], sum[o], val[o]);
 	if (l+1==r)
 		return ;
 	int m=(l+r)>>1;
@@ -108,7 +112,6 @@ int main()
 			tmp[k]=y2;
 			k++;
 		}
-		printf("qsort\n");
 		qsort((void *)(&line[1]), k-1, sizeof(struct ele_line),cmp_line);//sort line by x1 
 		qsort((void *)(&tmp[1]), k, sizeof(float), cmp_int);
 		y[1]=tmp[1];
@@ -120,16 +123,14 @@ int main()
 			y[n] = tmp[j];
 			n++;
 		}
-		for (j=1; j<n; j++)
+		/*for (j=1; j<n; j++)
 		{
 			printf("y[%d] %f\n",j, y[j]);
 		}
 		for (j=1; j<k; j++)
 		{
 			printf("line x1:%f, y1:%f, y2:%f value %d\n", line[j].x1, line[j].y1, line[j].y2, line[j].value);
-		}
-		printf("after qsort\n");
-		return 0;
+		}*/
 		float area=0;
 		val[1] = 0;
 		int ii;
@@ -137,14 +138,16 @@ int main()
 		{
 			ql = line[ii].y1;
 			qr = line[ii].y2;
-			printf("%f %f\n", ql, qr); 
+			//printf("%f %f\n", ql, qr); 
 			value = line[ii].value;
+			//show(1,1,n-1);
+			if (ii >1)
+			{
+				area += (line[ii].x1 - line[ii-1].x1) * sum[1];
+				update(1, 1, n-1); 
+			}
+			else
 			update(1, 1, n-1); 
-			//show(1,1,n);
-			printf("cover is %f\n",sum[1]);
-			printf("after\n");
-			if (i >1)
-				area += (line[i].x1 - line[i-1].x1) * sum[1];
 		}
 		printf("%f\n", area);
 	}
