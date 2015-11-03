@@ -26,11 +26,6 @@ int cmp_int(const void *_x, const void *_y)
 {
 	return *((float *)_x) > *((float *)_y);
 }
-void pass_down(int o)
-{
-	val[o*2] = val[o*2+1] = val[o];
-	val[o] = 0;
-}
 void down(int o, int l, int r)
 {
 	//printf("down--> l %d:%f, r%d:%f\n", l,y[l],r,y[r]);
