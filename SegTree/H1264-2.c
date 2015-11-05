@@ -38,36 +38,27 @@ void build_tree(int node_index, int l, int r)
 	int m = MID(l,r);	
 	build_tree(LL(node_index),l, m); 
 	build_tree(RR(node_index),m, r); 
-	main_tain(node_index);
 }
-void main_tain(int node_index)
+void main_tain(int node_index, int l, int r)
 {
-	tree[node_index].sum = tree[LL(node_index)].sum + tree[RR(node_index)].sum;
-}
-void down(int node_index, int l, int r)
-{
-	if (l + 1 == r)
+	if (tree[node_index].cover)
 	{
-		tree[node_index].cover +=cover;
-		if (tree[node_index].cover)
-		{
-			tree[node_index].sum = value[r] - value[l];
-		}
-		return;
+		tree[node_index].sum = value[r] - value[l];
 	}
-	if (l==r)
-		return;
-	int m = MID(l,r);	
-	down(LL(node_index), l, m);
-	down(RR(node_index), m, r);
-	main_tain(node_index);
+	else
+	if(l==r)
+		tree[node_index].sum=0;
+	else
+	tree[node_index].sum = tree[LL(node_index)].sum + tree[RR(node_index)].sum;
 }
 void update(int node_index, int l, int r)
 {
 	//printf("l-%d:%d r-%d:%d\n",l,value[l],r,value[r]);
 	if ( ql <= value[l]  && qr >= value[r] ) 
 	{
-		down(node_index, l, r);
+		//down(node_index, l, r);
+		tree[node_index].cover +=cover;
+		main_tain(node_index,l,r);
 		return ;
 	}
 	int m = MID(l,r);	
@@ -79,10 +70,6 @@ void update(int node_index, int l, int r)
 	{
 		update(RR(node_index),m, r);
 	}
-	if (l == r)
-	{
-		return;
-	}
 	/*if (qr <= value[m])
 		update(LL(node_index), l, m);
 	else if(ql >= value[m])
@@ -92,7 +79,7 @@ void update(int node_index, int l, int r)
 		update(LL(node_index),l,m);
 		update(RR(node_index),m, r);
 	}*/
-	main_tain(node_index);
+	main_tain(node_index,l,r);
 }
 int cmp_line(const void *_x, const void *_y)
 {
@@ -146,7 +133,7 @@ int main()
 		index = 1;
 		area = 0;
 		if (x1 == -2)
-		    break;
+		break;
 	}
 	else
 	{
