@@ -3,7 +3,7 @@
 #define LL(node) (2*node)
 #define RR(node) (2*node +1)
 #define MID(l, r) ((l + r)>>1)
-#define N 100
+#define N 400
 typedef struct ele_line
 {
 	int x1;
@@ -27,6 +27,14 @@ int qr;
 int ql;
 void build_tree(int node_index, int l, int r)
 {
+	if (l == r)
+	{
+		tree[node_index].l = l;
+		tree[node_index].r = r;
+		tree[node_index].cover = 0;
+		tree[node_index].sum = 0;
+		return ;
+	}
 	if (l + 1 == r)
 	{
 		tree[node_index].l = l;
@@ -53,7 +61,6 @@ void main_tain(int node_index, int l, int r)
 }
 void update(int node_index, int l, int r)
 {
-	//printf("l-%d:%d r-%d:%d\n",l,value[l],r,value[r]);
 	if ( ql <= value[l]  && qr >= value[r] ) 
 	{
 		//down(node_index, l, r);
@@ -143,6 +150,12 @@ int main()
 			tmp=y1;
 			y1=y2;
 			y2=tmp;
+		}
+		if (x1 > x2)
+		{
+			tmp= x1;
+			x1=x2;
+			x2=tmp;
 		}
 		value[index] = y1;
 		line [index].x1=x1;
