@@ -1,5 +1,5 @@
 /*
- * not test 	
+ * not test , wrong
  */
 #include<stdio.h>
 #include<stdlib.h>
@@ -11,13 +11,13 @@ struct city
 {
 	int q;
 	int r;
-}b[N]
-int b[N]={0};//0 is not used
-int com(const void *a, const void *b)
+};
+struct city b[N];
+int cmp(const void *a, const void *b)
 {
 	struct city *t = (struct city *)a;
 	struct city *s = (struct city *)b;
-	return t.q > s.q;
+	return t->q > s->q;
 }
 int main()
 {
@@ -35,8 +35,8 @@ int main()
 	{
 		scanf("%d%d", &p, &r);
 		
-		b[index].q = q;
-		b[index].r = r;
+		b[case_index].q = p;
+		b[case_index].r = r;
 		max = MAX(max,MAX(p,r));
 		case_index++;
 	}
