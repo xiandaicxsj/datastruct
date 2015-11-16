@@ -7,6 +7,7 @@
 #include<stdio.h>
 #define N 500001
 int d[N] ={0};
+int value[N] ={0};
 int num[N] ={0};
 void complete_bag(int value, int num, int max_value)
 {
