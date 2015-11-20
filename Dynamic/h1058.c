@@ -27,7 +27,7 @@ int main()
 	long long five_a;
 	long long seven_a;
 	case_index=1;
-	while(scanf("%d", &order)!=EOF)
+	while(scanf("%d", &order),order)
 	{
 		while(case_index < order)
 		{
