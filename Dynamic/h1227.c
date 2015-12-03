@@ -1,4 +1,5 @@
 /*
+ * wrong answer
  */
 #include<stdio.h>
 #define MAX 100000
