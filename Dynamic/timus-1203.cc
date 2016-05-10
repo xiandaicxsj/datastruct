@@ -1,7 +1,8 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
-#define MAX 10000
+#define MAX 100001
+#define MAX_TIME 30001
 int max(int a, int b, int c)
 {
 	int max = a;
@@ -18,7 +19,7 @@ struct mt
 	int e;
 };
 struct mt meeting[MAX];
-int dp[MAX];
+int dp[MAX_TIME];
 int cmp(const void *a, const void *b)
 {
 	return ((struct mt *) a)->e - ((struct mt *)b)->e;
