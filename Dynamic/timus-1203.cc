@@ -32,10 +32,20 @@ int main()
 	qsort((void *)(meeting), n, sizeof(struct mt), cmp);
 	memset(dp, 0,n*sizeof(int));
 	dp[meeting[0].e] = 1; 
+	int b = 0;
+	int e = 0;
+	int tmp = 0;
 	for(int i=1; i<n; i++)
 	{
 		dp[meeting[i].e] = max(dp[meeting[i-1].e],dp[meeting[i].s]+1,dp[meeting[i].e]); /* is 3rd needed ? Not need as meeting[i-1].e can be the same with meeting[i].e*/
 
+		e = meeting[i].e;
+		tmp = dp[b];
+		while(b < e)
+		{
+			dp[b] = max(tmp, dp[b], 0);
+			b ++;
+		}
 		//dp[meeting[i].e] = max(dp[meeting[i-1].e],dp[meeting[i].s]+1,0);
 	}
 	printf("%d\n", dp[meeting[n-1].e]);
