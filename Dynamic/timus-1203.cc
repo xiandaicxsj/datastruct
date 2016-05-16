@@ -36,9 +36,10 @@ int main()
 	int b = 0;
 	int e = 0;
 	int tmp = 0;
+	dp[0] = 0;
 	for(int i=1; i<n; i++)
 	{
-		dp[meeting[i].e] = max(dp[meeting[i-1].e],dp[meeting[i].s]+1,dp[meeting[i].e]); /* is 3rd needed ? Not need as meeting[i-1].e can be the same with meeting[i].e*/
+		dp[meeting[i].e] = max(dp[meeting[i-1].e], dp[meeting[i].s - 1]+1,dp[meeting[i].e]); /* is 3rd needed ? Not need as meeting[i-1].e can be the same with meeting[i].e*/
 
 		e = meeting[i].e;
 		tmp = dp[b];
