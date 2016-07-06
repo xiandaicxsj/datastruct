@@ -1,14 +1,17 @@
 /* 1072.cc */
 /* */
 #include<stdio.h>
+#include<math.h>
 #define MAX_VALUE 65535
-#define MAX 500
+#define MAX 60002
 int dp[MAX] ;
 
 int min(int a, int b)
 {
 	return a>b? b:a;
 }
+/*
+ * my version 
 
 int main()
 {
@@ -28,7 +31,7 @@ int main()
 		tmp_size = 0;
 	for (i = 0; i<=max_size; i++)
 	{
-		dp[i] = MAX_VALUE;
+		dp[i] = i;
 	}
 	while(size <= max_size)
 	{
@@ -54,3 +57,24 @@ int main()
 	printf("%d\n", dp[max_size]);
 	}
 }
+*/
+/*
+ * dp[v] = min( dp[v], dp[v-j] + 1)
+ *
+ */
+int main()
+{
+	int v;
+	int i;
+	int j;
+	scanf("%d", &v);
+	for (i = 0; i <= v; i++)	
+		dp[i] = i;
+	for(i = 1; i <= sqrt(v); i++)
+	{
+		for (j = i*i; j <= v; j++)
+			dp[j] = min(dp[j], dp[j-i*i] + 1);
+	}
+	printf("%d\n", dp[v]);
+}
+
