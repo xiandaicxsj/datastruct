@@ -1,46 +1,57 @@
-/* the debult alum */
-/* 
- * can reduce memory space
- *dp[i][a] = max(dp[i-1][a-1] + 1, dp[i-1][a])
- */
-/*
-#define MAX 200 
-long long dp[MAX][MAX];
-#include<stdio.h> 
+#include<stdio.h>
+
+#define MAX 1000
+int dp[MAX];
+
 int main()
 {
 	int n,a,b;
-	int _a;
+	int maxb;
+	int maxa;
 	int i = 0;
-	int t = 0;
-	int ret = 0;
-	while(scanf("%d %d %d", &n, &a, &b)!=EOF)
+	int j = 0;
+	scanf("%d%d%d", &n, &a, &b);
+	i = 1;
+	j = 1;
+
+	for(i; i<=a+b; i++)
+		dp[i] = 0;
+
+	dp[1] = 1;
+	dp[a + 1] = 1;
+
+	for(i = 2; i<=n ; i++)
 	{
-		dp[1][1] = 1;
-		for(i = 1; i<=n; i++)
-			dp[i][0] = 1;
+		maxa = 0;
+		maxb = 0;
+		for (j = 1; j<=a; j++)
+		{
+			maxa += dp[j];
+		}
 
-		for(i = 2; i <= n; i++)
-			for(t = 1; t <= i; t++)
-			{
-				dp[i][t] = dp[i- 1][t - 1] + dp[i-1][t];
-			}
+		for(j; j<=a+b; j++)
+		{
+			maxb += dp[j];
+		}
 
-		ret = 0;
-		for(i = a; i <= n; i++)
-			if ( n - i >= b )
-			{
-				ret += dp[n][i];
-				printf("ret %d %llx\n", i, dp[n][i]);
-			}
-		printf("ret is %d\n", ret);
+		for (j = a + b - 1; j > a; j--)
+		{
+			dp[j] = dp[j-1];
+		}
+		dp[j] = maxb;
+		j --;
+
+		for(;j > 1; j--)
+		{
+			dp[j] = dp[j-1];
+		}
+		dp[j] = maxa;
+
 	}
+	maxa = 0;
+	for(i=1 ; i<=a+b; i++)
+		maxa += dp[i];
+
+	printf("%d\n", maxa);
 	return 0;
 }
-*/
-/* misunderstand the meaning of the question */
-/* two consutive mix */
-
-
-
-
