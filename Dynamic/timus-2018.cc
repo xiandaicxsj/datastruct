@@ -1,13 +1,14 @@
 #include<stdio.h>
 
-#define MAX 1000
-int dp[MAX];
+#define MAX  50003
+#define MOD  1000000007
+unsigned long long  dp[MAX];
 
 int main()
 {
 	int n,a,b;
-	int maxb;
-	int maxa;
+	unsigned long long maxb;
+	unsigned long  long maxa;
 	int i = 0;
 	int j = 0;
 	scanf("%d%d%d", &n, &a, &b);
@@ -36,22 +37,22 @@ int main()
 
 		for (j = a + b - 1; j > a; j--)
 		{
-			dp[j] = dp[j-1];
+			dp[j] = dp[j-1] % MOD;
 		}
-		dp[j] = maxb;
+		dp[j] = maxb % MOD;
 		j --;
 
 		for(;j > 1; j--)
 		{
-			dp[j] = dp[j-1];
+			dp[j] = dp[j-1] %MOD;
 		}
-		dp[j] = maxa;
+		dp[j] = maxa % MOD;
 
 	}
 	maxa = 0;
 	for(i=1 ; i<=a+b; i++)
 		maxa += dp[i];
 
-	printf("%d\n", maxa);
+	printf("%lld\n", maxa % MOD);
 	return 0;
 }
