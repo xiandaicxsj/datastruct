@@ -21,6 +21,10 @@ int main()
 	dp[1] = 1;
 	dp[a + 1] = 1;
 
+	i = 1;
+	printf(" %d --------\n", i);
+	for(j = 1; j <= a+b; j++)
+		printf("j %d: %d\n", j, dp[j]);
 	for(i = 2; i<=n ; i++)
 	{
 		maxa = 0;
@@ -35,10 +39,11 @@ int main()
 			maxb += dp[j];
 		}
 
-		for (j = a + b - 1; j > a; j--)
+		for (j = a + b; j > a + 1; j--)
 		{
 			dp[j] = dp[j-1] % MOD;
 		}
+		printf("j: %d, %d\n", j, maxb);
 		dp[j] = maxb % MOD;
 		j --;
 
@@ -47,6 +52,11 @@ int main()
 			dp[j] = dp[j-1] %MOD;
 		}
 		dp[j] = maxa % MOD;
+
+		printf("%d--------\n", i);
+		printf("maxa %d maxb %d\n", maxa, maxb);
+		for(j = 1; j <= a+b; j++)
+			printf("j %d: %d\n", j, dp[j]);
 
 	}
 	maxa = 0;
