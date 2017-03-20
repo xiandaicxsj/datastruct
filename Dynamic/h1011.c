@@ -39,8 +39,10 @@
   Ongoning
 
   */
+#include<stdio.h>
 #define MAX_ROM 100
 #define MAX_TRA 100
+int dp[MAX_ROM][MAX_TRA];
 int room[MAX_ROM][MAX_ROM];
 //int tper[MAX_ROM];
 int bugs[MAX_ROM];
@@ -67,12 +69,12 @@ void cal_max(int parent_idx)
 			if (tper_num < tper_required)
 				dp[room_idx][tper_num] = dp[parent_idx][tper_num];
 			else
-				dp[room_idx][tper_num] = max(dp[room_idx][tper_num], dp[room_idx][tper_num - min_trop] + posb[room_idx]);
-			max_posb = max(max_posb, dp[root_idx][tper_num]);
+				dp[room_idx][tper_num] = max(dp[room_idx][tper_num], dp[parent_idx][tper_num - tper_required] + posb[room_idx]);
+			max_posb = max(max_posb, dp[room_idx][tper_num]);
 		}
 		visited[room_idx] = 1; 
 		cal_max(room_idx);
-		visited[idx] = 0;
+		visited[room_idx] = 0;
 	}
 }
 
@@ -83,17 +85,17 @@ int main()
 	int room_idx;
 	int x,y;
 
-	scanf("%d %d\n", &room_num, &all_tper_num);
+	scanf("%d %d", &room_num, &all_tper_num);
 	room_idx = 0;
 	while(room_idx < room_num) {
-		scanf("%d %d", bugs[room_idx], posb[room_idx]);
+		scanf("%d %d", &bugs[room_idx], &posb[room_idx]);
 		room_idx ++;
 	}
 
 	while(scanf("%d %d", &x, &y) && (x != -1) && (y != -1)) {
 		room[x][y] = 1;
 	}
-	root_idx = 0;
+	room_idx = 0;
 	cal_max(room_idx);
 	return 0;
 }
