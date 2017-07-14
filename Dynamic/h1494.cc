@@ -66,10 +66,20 @@ int cal_dp(int seg, int round)
 	dp_print(1);
 	for(idx = 2; idx <= seg * round; idx++) {
 		for(en = 0; en <= EN_NUM; en ++) {
-			if (!en)
-				dp[idx][en] = dp[idx - 1][en + (EN_NUM/2) > EN_NUM ? EN_NUM : en + EN_NUM / 2] + l[cal_idx(idx, seg)];
-			else
-				dp[idx][en] = min(dp[idx - 1][en - 1] + h[cal_idx(idx, seg)], dp[idx - 1][en + (EN_NUM/2) > EN_NUM ? EN_NUM : en + (EN_NUM/2)] + l[cal_idx(idx, seg)]);
+			if (!en) {
+				int k = dp[idx - 1][en + (EN_NUM/2) > EN_NUM ? EN_NUM : en + EN_NUM / 2 - 1 ];
+				k = (k == MAX_DATA ? MAX_DATA : k + l[cal_idx(idx, seg)]);
+				dp[idx][en] = k;
+			}
+			else { 
+				int a = (dp[idx - 1][en -1] == MAX_DATA ? MAX_DATA: dp[idx - 1][en - 1] + h[cal_idx(idx, seg)]);
+				int b = dp[idx - 1][en + (EN_NUM/2) - 1 > EN_NUM ? EN_NUM : en + (EN_NUM/2) - 1];
+				
+				b = b == MAX_DATA ? MAX_DATA : b + l[cal_idx(idx, seg)];
+
+				dp[idx][en] = min(a, b);
+
+			}
 		}
 	dp_print(idx);
 
@@ -97,7 +107,7 @@ int main() {
 		scanf("%d", &l[idx]);
 	for(idx = 0; idx <= seg * round; idx++)
 	{
-		for(int j = 0; j < 8; j++)
+		for(int j = 0; j <= EN_NUM; j++)
 			dp[idx][j] = MAX_DATA;
 	}
 	cal_dp(seg, round);

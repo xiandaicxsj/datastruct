@@ -35,6 +35,7 @@ int main()
 	int max = -10000;
 	for(; i<n*n; i++)
 		scanf("%d", &(array[i/n][i%n]));
+	/* begin */
 	for(i = 0; i<n; i++)
 	{
 		memset(tmp, 0, sizeof(int)*N);
