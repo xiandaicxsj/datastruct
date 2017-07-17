@@ -1,0 +1,4 @@
+hdu acm : 
+problem class
+
+http://acm.hdu.edu.cn/typeclass.php
