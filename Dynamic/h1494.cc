@@ -31,35 +31,47 @@
  */
 
 /* 
- * dp[k][8]; k represent 
+ * dp[k][energy]; k represent the seg number energy represent the 0-10 energy status
  *
  * dp[k + 1][i] = min(dp[k][i - 1] + h[k + 1], dp[k][i + 4] + l[k + 1]);
+ * 
+ * Thinking:
+ *
+ * We should know which variable is the "state" variable. For example, for k phrase, what k + 1 choose should not depend on k. 
  */
 
 #include<stdio.h>
 #define MAX 100
 #define EN_NUM 10
-#define MAX_DATA 0xffffff
-unsigned int dp[MAX][EN_NUM];
+#define MAX_DATA 0xffffffff
+typedef unsigned long long var_t;
+var_t dp[MAX][EN_NUM+2];
 int h[MAX];
 int l[MAX];
 
+#ifdef TEST
 void dp_print(int idx)
 {
 	int en = 0;
-	printf("idx: %d-------\n", idx);
 	for(en = 0; en <= EN_NUM; en ++) {
-		printf("%d\t", dp[idx][en]);
+		printf("0x%llx  ", dp[idx][en]);
 	}
 	printf("\n");
 }
+#else
+void dp_print(int idx)
+{
+
+}
+#endif
+
 #define cal_idx(a, b) (a)
 #define min(a, b) ((a) > (b) ? (b) : (a))
 int cal_dp(int seg, int round)
 {
 	int idx = 1;
 	int en = 0;
-	unsigned int mina;
+	var_t mina;
 
 	dp[1][0] = h[1];
 
@@ -67,31 +79,34 @@ int cal_dp(int seg, int round)
 	for(idx = 2; idx <= seg * round; idx++) {
 		for(en = 0; en <= EN_NUM; en ++) {
 			if (!en) {
-				int k = dp[idx - 1][en + (EN_NUM/2) > EN_NUM ? EN_NUM : en + EN_NUM / 2 - 1 ];
-				k = (k == MAX_DATA ? MAX_DATA : k + l[cal_idx(idx, seg)]);
+
+				var_t k = dp[idx - 1][(EN_NUM/2) - 1];
+				k = ((k == MAX_DATA) ? MAX_DATA : (k + l[cal_idx(idx, seg)]));
 				dp[idx][en] = k;
-			}
-			else { 
-				int a = (dp[idx - 1][en -1] == MAX_DATA ? MAX_DATA: dp[idx - 1][en - 1] + h[cal_idx(idx, seg)]);
-				int b = dp[idx - 1][en + (EN_NUM/2) - 1 > EN_NUM ? EN_NUM : en + (EN_NUM/2) - 1];
+			} else { 
+				int idxx = (en + (EN_NUM/2) - 1) > EN_NUM ? (EN_NUM + 1) : (en + (EN_NUM/2) - 1);
+				var_t a = (dp[idx - 1][en -1] == MAX_DATA ? MAX_DATA: (dp[idx - 1][en - 1] + h[cal_idx(idx, seg)]));
+				var_t b = dp[idx - 1][idxx];
 				
-				b = b == MAX_DATA ? MAX_DATA : b + l[cal_idx(idx, seg)];
+				if (idxx == EN_NUM + 1)
+					b = MAX_DATA;
+				else
+					b = ((b >= MAX_DATA) ? MAX_DATA : (b + l[cal_idx(idx, seg)]));
 
 				dp[idx][en] = min(a, b);
 
 			}
 		}
-	dp_print(idx);
+		dp_print(idx);
 
 	}
 	
 	mina = dp[idx - 1][0]; 
-	for (en = 1; en <= EN_NUM; en++)
-	{
-		printf("%d\n", dp[idx -1][en]);
+	for (en = 1; en <= EN_NUM; en++) {
 		mina = min(mina, dp[idx -1][en]);
 	}
-	printf("%d\n", mina);
+
+	printf("%lld\n", mina);
 }
 
 int main() {
@@ -107,7 +122,7 @@ int main() {
 		scanf("%d", &l[idx]);
 	for(idx = 0; idx <= seg * round; idx++)
 	{
-		for(int j = 0; j <= EN_NUM; j++)
+		for(int j = 0; j <= EN_NUM + 1; j++)
 			dp[idx][j] = MAX_DATA;
 	}
 	cal_dp(seg, round);
