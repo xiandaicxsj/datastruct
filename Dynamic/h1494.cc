@@ -41,7 +41,7 @@
  */
 
 #include<stdio.h>
-#define MAX 100
+#define MAX 10001
 #define EN_NUM 10
 #define MAX_DATA 0xffffffff
 typedef unsigned long long var_t;
@@ -115,7 +115,7 @@ int main() {
 	int round;
 	int idx = 0;
 
-	scanf("%d %d\n", &seg, &round);
+	while(scanf("%d %d\n", &seg, &round) !=0) {
 	for(idx = 1; idx <= seg; idx++)
 		scanf("%d", &h[idx]);
 	for(idx = 1; idx <= seg; idx++)
@@ -124,8 +124,9 @@ int main() {
 	{
 		for(int j = 0; j <= EN_NUM + 1; j++)
 			dp[idx][j] = MAX_DATA;
-	}
+		}
 	cal_dp(seg, round);
+	}
 	
 	return 0;
 }
