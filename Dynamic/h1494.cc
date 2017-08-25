@@ -116,16 +116,16 @@ int main() {
 	int idx = 0;
 
 	while(scanf("%d %d\n", &seg, &round) !=0) {
-	for(idx = 1; idx <= seg; idx++)
-		scanf("%d", &h[idx]);
-	for(idx = 1; idx <= seg; idx++)
-		scanf("%d", &l[idx]);
-	for(idx = 0; idx <= seg * round; idx++)
-	{
-		for(int j = 0; j <= EN_NUM + 1; j++)
-			dp[idx][j] = MAX_DATA;
+		for(idx = 1; idx <= seg; idx++)
+			scanf("%d", &h[idx]);
+		for(idx = 1; idx <= seg; idx++)
+			scanf("%d", &l[idx]);
+		for(idx = 0; idx <= seg * round; idx++) {
+			for(int j = 0; j <= EN_NUM + 1; j++)
+				dp[idx][j] = MAX_DATA;
 		}
-	cal_dp(seg, round);
+
+		cal_dp(seg, round);
 	}
 	
 	return 0;
