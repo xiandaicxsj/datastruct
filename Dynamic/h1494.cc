@@ -34,6 +34,11 @@
  * dp[k][energy]; k represent the seg number energy represent the 0-10 energy status
  *
  * dp[k + 1][i] = min(dp[k][i - 1] + h[k + 1], dp[k][i + 4] + l[k + 1]);
+
+   dp[k][en] at the end of each seg
+   if en == 0
+	no;
+   dp[k] 
  * 
  * Thinking:
  *
@@ -42,19 +47,22 @@
 
 #include<stdio.h>
 #define MAX 10001
-#define EN_NUM 10
+#define EN_NUM 15
 #define MAX_DATA 0xffffffff
+#define INF 0xffffffff
 typedef unsigned long long var_t;
 var_t dp[MAX][EN_NUM+2];
 int h[MAX];
 int l[MAX];
 
+/*
 #ifdef TEST
 void dp_print(int idx)
 {
 	int en = 0;
+	printf("\n");
 	for(en = 0; en <= EN_NUM; en ++) {
-		printf("0x%llx  ", dp[idx][en]);
+		printf("0x%lld  ", dp[idx][en]);
 	}
 	printf("\n");
 }
@@ -64,48 +72,57 @@ void dp_print(int idx)
 
 }
 #endif
+*/
 
 #define cal_idx(a, b) (a)
-#define min(a, b) ((a) > (b) ? (b) : (a))
+var_t min(var_t a, var_t b)
+{
+	if (a == INF)
+		return b;
+	if (b == INF)
+		return a;
+	return a > b ? b: a;
+}
+
+var_t _cal(var_t a, var_t b)
+{
+	if (a == INF || b == INF)
+		return INF;
+	return a + b;
+}
+int _round(int a)
+{
+	if ( a > EN_NUM )
+		return 0;
+	return a;
+}
+
 int cal_dp(int seg, int round)
 {
 	int idx = 1;
 	int en = 0;
 	var_t mina;
 
-	dp[1][0] = h[1];
-
-	dp_print(1);
+	dp[1][1] = h[1];
 	for(idx = 2; idx <= seg * round; idx++) {
-		for(en = 0; en <= EN_NUM; en ++) {
-			if (!en) {
-
-				var_t k = dp[idx - 1][(EN_NUM/2) - 1];
-				k = ((k == MAX_DATA) ? MAX_DATA : (k + l[cal_idx(idx, seg)]));
-				dp[idx][en] = k;
-			} else { 
-				int idxx = (en + (EN_NUM/2) - 1) > EN_NUM ? (EN_NUM + 1) : (en + (EN_NUM/2) - 1);
-				var_t a = (dp[idx - 1][en -1] == MAX_DATA ? MAX_DATA: (dp[idx - 1][en - 1] + h[cal_idx(idx, seg)]));
-				var_t b = dp[idx - 1][idxx];
-				
-				if (idxx == EN_NUM + 1)
-					b = MAX_DATA;
-				else
-					b = ((b >= MAX_DATA) ? MAX_DATA : (b + l[cal_idx(idx, seg)]));
-
-				dp[idx][en] = min(a, b);
-
-			}
+		for(en = 1; en <= EN_NUM; en ++) {
+			dp[idx][en] = min(dp[idx][en],_cal(dp[idx - 1][en - 1], h[idx]));
+			if(en < 10)
+				dp[idx][en] = min(dp[idx][en], _cal(dp[idx-1][_round(en - 1 + EN_NUM/2)], l[idx])); 
+			if(en == 10)
+				dp[idx][en] = min(dp[idx][en], dp[]);
 		}
-		dp_print(idx);
-
 	}
 	
-	mina = dp[idx - 1][0]; 
-	for (en = 1; en <= EN_NUM; en++) {
-		mina = min(mina, dp[idx -1][en]);
+/*
+	for(idx = 1; idx <= seg * round; idx++) {
+		dp_print(idx);
 	}
+*/
 
+	mina = dp[idx - 1][0]; 
+	for (en = 1; en <= EN_NUM; en++)
+		mina = min(mina, dp[idx -1][en]);
 	printf("%lld\n", mina);
 }
 
@@ -122,7 +139,7 @@ int main() {
 			scanf("%d", &l[idx]);
 		for(idx = 0; idx <= seg * round; idx++) {
 			for(int j = 0; j <= EN_NUM + 1; j++)
-				dp[idx][j] = MAX_DATA;
+				dp[idx][j] = INF;
 		}
 
 		cal_dp(seg, round);
