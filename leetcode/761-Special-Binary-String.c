@@ -25,11 +25,22 @@ status: TESTDONE
 #include<stdio.h>
 #define MAX_NUM 30
 
-char* makeLargestSpecial(char* S) {
-    
-}
 char dp[MAX_NUM][MAX_NUM][MAX_NUM];
-int linkstr(char *src1, char *src2, char* dest)
+int d[MAX_NUM][MAX_NUM];
+void dump(int b, int e)
+{
+	int j = 0;
+	if (d[b][e] == -1 || b == e)
+		return;
+
+	j = d[b][e];
+	printf("%d--%d: %d\n", b ,e, j);
+	dump(b, j);
+	if (j + 1 < e)
+		dump(j+1, e);
+}
+
+void linkstr(char *src1, char *src2, char* dest)
 {
 	int len = strlen(src1);
 	int i = 0;
@@ -69,8 +80,7 @@ int is_zero(char *s)
 	return 1;
 }
 
-char *finds(char *S)
-{
+char* makeLargestSpecial(char* S) {
 	//char *dp;
 	int len = strlen(S);
 	int i = 0;
@@ -80,12 +90,12 @@ char *finds(char *S)
 	char max[MAX_NUM];
 	char tmp[MAX_NUM];
 
-	printf("%s\n", S);
 	//dp = (char *)malloc(sizeof(char) * MAX_NUM * len *len);
 	for (; i< len; i++)
 		for (j = i; j< len; j++)
 		{
 			strncpy(dp[i][j], &S[i], j - i + 1);
+			d[i][j] = -1;
 		}
 
 	for (s = 1; s < len; s++) {
@@ -99,14 +109,18 @@ char *finds(char *S)
 				linkstr(dp[i][j], dp[j+1][i+s], tmp);
 				
 				printf("----%d--%d %d--%d %s\n", i, j, j+1, i+s, tmp);
-				if (strncmp(tmp, max, strlen(max)) > 0)
+				if (strncmp(tmp, max, strlen(max)) > 0) {
 					strncpy(max, tmp, strlen(max));
+					d[i][i+s] = j; 
+				}
 
 				if (S[j] < S[j+1]) {
 					if (!is_zero(dp[j+1][i+s]) && !is_zero(dp[i][j])) {
 						linkstr(dp[j+1][i+s], dp[i][j], tmp);
-						if (strncmp(tmp, max, strlen(max)) > 0)
+						if (strncmp(tmp, max, strlen(max)) > 0) {
 							strncpy(max, tmp, strlen(max));
+							d[i][i+s] = j; 
+						}
 						printf("after change ----%d-%d-%d %s max is %s\n", i, j, i+s, tmp, max);
 						printf(" %s %s\n", dp[j+1][i+s], dp[i][j]);
 					}
@@ -116,11 +130,15 @@ char *finds(char *S)
 			strncpy(dp[i][j], max, s + 1);
 		}
 	}
-	printf("%s\n", dp[0][len-1]);
+	dump(0, len -1);
+	return dp[0][len-1];
 }
 
 int main()
 {
-	finds("11011000");
+	char s[51];
+	scanf("%s", s);
+	printf("%s\n", s);
+	printf("%s\n", makeLargestSpecial(s));
 
 }
