@@ -42,11 +42,92 @@
  * }
  */
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #include<stdio.h>
+
+int accu_point(int *point, int a, int idx, int size)
+{
+	int _idx = idx;
+	int dec = 0;
+	do { 
+		if (a < _idx)
+			point[dec] ++;
+
+		if (_idx == 0)
+			_idx = size - 1;
+		else
+			_idx --;
+		dec ++;
+		
+	} while(_idx != idx)
+}
+
+int accu_point(int *point, int a, int idx, int size)
+{
+	int e = 0;
+	int b = 0;
+
+	if (a <= idx) {
+		b = idx; e = size 
+		b = 0, e = idx - a;
+	}
+
+	if (a > idx) {
+		/* for max of a < size */
+		if (a - idx > 0) {
+			b = a - idx;
+			e = idx + size - a;
+		} else	{
+			b = idx;
+			e = idx + size - a;
+		}
+	}
+}
 
 int bestRotation(int* A, int ASize)
 {
-	    
+	int i;
+	int *point = malloc(sizeof(int) * ASize);
+	int max_v = 0;
+	int min_r = 0;
+
+	memset(point, 0 , sizeof(point);
+	for (i = 0; i < ASize; i++)
+		accu_point(point, A[i], i, ASize);
+
+	max_v = point[0];
+	for (i = 1; i < ASize; i++) {
+		if (point[i] > max_v)
+			min_r = i;
+	}
+	return min_r;
 }
 
 int main()
