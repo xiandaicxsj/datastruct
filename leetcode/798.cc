@@ -46,92 +46,73 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
 
-int accu_point(int *point, int a, int idx, int size)
+void accu(int * point, int b, int e)
 {
-	int _idx = idx;
-	int dec = 0;
-	do { 
-		if (a < _idx)
-			point[dec] ++;
-
-		if (_idx == 0)
-			_idx = size - 1;
-		else
-			_idx --;
-		dec ++;
-		
-	} while(_idx != idx)
+	point[b] ++;
+	point[e + 1]--;
 }
 
-int accu_point(int *point, int a, int idx, int size)
+int MIN(int a, int b)
 {
-	int e = 0;
-	int b = 0;
-
-	if (a <= idx) {
-		b = idx; e = size 
-		b = 0, e = idx - a;
-	}
-
-	if (a > idx) {
-		/* for max of a < size */
-		if (a - idx > 0) {
-			b = a - idx;
-			e = idx + size - a;
-		} else	{
-			b = idx;
-			e = idx + size - a;
-		}
-	}
+	return a > b ? b: a;
 }
-
 int bestRotation(int* A, int ASize)
 {
-	int i;
-	int *point = malloc(sizeof(int) * ASize);
-	int max_v = 0;
-	int min_r = 0;
+ 	int *point = (int *)malloc(sizeof(int) * (ASize + 1));
+	int sum = 0;
+	int max_idx;
+	int ri;
+	int max;
+	int i =0;
 
-	memset(point, 0 , sizeof(point);
-	for (i = 0; i < ASize; i++)
-		accu_point(point, A[i], i, ASize);
+	memset(point, 0, sizeof(point));
+	/*
+	 * idx: A[i] -> ASize() can get point
+	 * [0, ASize -1] 
+	 */
+	for (i = 0; i < ASize; i++) {
 
-	max_v = point[0];
-	for (i = 1; i < ASize; i++) {
-		if (point[i] > max_v)
-			min_r = i;
+		if (A[i] > ASize -1)
+			continue;
+
+		max_idx = MIN(ASize - 1, A[i]);
+		if (i < max_idx) {
+				/* i + 1 */
+				accu(point, i + 1, i + ASize - max_idx);
+		} else {
+				accu(point, 0, i - max_idx);
+				accu(point, i + 1, ASize - 1);
+		}
 	}
-	return min_r;
+	ri = 0;
+	sum = point[ri]; 
+	max = sum;
+
+	for (i = 1; i< ASize; i++) {
+		sum += point[i];
+		if (sum > max) {
+			max = sum;
+			ri = i;
+		}
+		
+	}
+	return ri;
 }
 
+int A[2000];
 int main()
 {
+	int ASize;
+	int i = 0;
 
+	scanf("%d", &ASize);
+	for (i; i< ASize; i++)
+		scanf("%d", &A[i]);
+	printf("%d\n", bestRotation(A, ASize));
 	return 0;
 }
+      
