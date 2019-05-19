@@ -46,10 +46,66 @@ Note:
 
 1 <= K <= 100
 1 <= N <= 10000
+dp[N][K] = MAX(dp[(n-1)/2][K], dp[(n-1)/2 + (n-1) % 2][K-1]) + 1; (K > 1) 
+dp[N][K] 代表的 
+TEST PASS
+NOT AC
 */
+#include<iostream>
+using namespace std;
+int dp[10000][100] = {0};
+#define max(a, b)  ((a) > (b) ? (a):(b))
 class Solution {
 public:
     int superEggDrop(int K, int N) {
 
+	    int ll;
+	    int rl;
+	    int j = 0;
+	    int i = 0;
+	    int max_t = 0;
+	    for (j = 1; j <= K; j++)
+		    dp[1][j] = 1;
+
+	    for (i = 2; i <= N; i++) {
+#if 0
+		    cout<<"begin ";
+		    cout<<i<<endl;
+#endif
+		    for (j = 1; j <= K; j++) {
+			  max_t = (max(dp[(i + 1)/2 - 1][j - 1], dp[i - (i+1)/2][j]));
+			   dp[i][j] = max_t == 0 ? 0 : max_t + 1;
+#if 0
+
+			    if (dp[i/2][j]  == 0 ||
+				    dp[i/2 + i%2][j -1] ==0)
+				    dp[i][j] = 0;
+			    else
+				   dp[i][j] = (max(dp[i/2][j], dp[i/2 + i%2][j -1])) ==0 ? 0: max(dp[i/2][j], dp[i/2 + i%2][j -1]) + 1;
+#endif
+			}
+
+	   }	
+
+#if 0
+	   for (i = 1; i <= N; i++) {
+		    for (j = 1; j <= K; j++) {
+		cout <<i <<" "<<j<<':'<<dp[i][j]<<endl;
+	    }
+	  }
+#endif
+	    return dp[N][K];
     }
 };
+
+int main()
+{
+	int n, k;
+	cin >> k;
+	cin >> n;
+	Solution S;
+	cout << S.superEggDrop(k, n);
+
+	return 0;
+}
+
