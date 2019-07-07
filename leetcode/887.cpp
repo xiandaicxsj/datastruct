@@ -53,7 +53,7 @@ NOT AC
 */
 #include<iostream>
 using namespace std;
-int dp[10000][100] = {0};
+int dp[10001][101] = {0};
 #define max(a, b)  ((a) > (b) ? (a):(b))
 class Solution {
 public:

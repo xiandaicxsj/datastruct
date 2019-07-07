@@ -52,7 +52,7 @@ think of where to put dp[][]? and the size of
 #include<iostream>
 using namespace std;
 
-int dp[2000][2000] = {0};
+int dp[200][200] = {0};
 class Solution {
 public:
     bool isMatch(string s, string p) {
@@ -80,17 +80,8 @@ public:
  		for (j = 1; j <= p.length() ; j++) {
 
 			if (i == 0) {
-# if 0
 				if (j == 1 && p[0] =='*')
 					dp[0][j] = 1;
-				else
-					continue;
-#endif
-				if (p[j - 1] == '*') {
-					dp[0][j] = dp[0][j-1];
-				}
-				else
-					dp[0][j] = 0;
 				continue;
 			} 
 			
@@ -103,8 +94,8 @@ public:
 	}
 
 #if 0
-	for (i = 0; i <= s.length() ; i++)
- 		for (j = 0; j <= p.length() ; j++) {
+	for (i = 1; i <= s.length() ; i++)
+ 		for (j = 1; j <= p.length() ; j++) {
 			cout <<i<<" "<<j<<" "<<dp[i][j]<<endl;
 	}
 #endif
