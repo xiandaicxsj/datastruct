@@ -15,6 +15,7 @@ Input:
   s = "wordgoodgoodgoodbestword",
   words = ["word","good","best","word"]
 Output: []
+THINKING
 */
 class Solution {
 public:
