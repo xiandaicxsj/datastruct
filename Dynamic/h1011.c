@@ -106,7 +106,7 @@ int main()
 	int room_idx;
 	int x,y;
 
-	while(scanf("%d %d", &room_num, &all_tper_num) && (room_num != -1) && (all_tper_num != -1)) {
+		scanf("%d %d", &room_num, &all_tper_num);
 		max_posb = 0;
 		room_idx = 1;
 		while(room_idx <= room_num) {
@@ -117,8 +117,10 @@ int main()
 
 		room_idx = 1;
 		/* room_num -1 tunnel */
-		for(;room_idx < room_num; room_idx ++) {
+		while(1) {
 			scanf("%d %d", &x, &y);
+			if (x == 0 && y == 0) 
+				break;
 			room[x][y] = 1;
 		}
 
@@ -133,6 +135,5 @@ int main()
 		cal_max(room_idx);
 		printf("%d\n", max_posb);
 		//debug_all();
-	}
 	return 0;
 }
