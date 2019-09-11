@@ -36,10 +36,11 @@
   7
 
   Status:
-  Ongoning
+  W
 
   */
 #include<stdio.h>
+#include<string.h>
 #define MAX_ROM 100
 #define MAX_TRA 100
 int dp[MAX_ROM][MAX_TRA] = {0};
@@ -75,30 +76,42 @@ void debug_visit()
 	printf("\n");
 }
 */
+
+/* DEEP first and dynamic programming */
+/* O(N2) */
 void cal_max(int parent_idx)
 {
 	int tper_required; 
 	int room_idx = 1;
 	int tper_num;
+	int no_child = 1;
 
 	for (; room_idx <= room_num; room_idx ++) {
 		if (!room[parent_idx][room_idx] || visited[room_idx] )
 			continue;
+		no_child = 0;
 
 		tper_required = bugs[room_idx] % 20 ? bugs[room_idx] / 20 + 1: bugs[room_idx] / 20;
 
 		for (tper_num = 0; tper_num <= all_tper_num; tper_num++) {
-			if (tper_num < tper_required)
+			if (tper_num > tper_required)
 				dp[room_idx][tper_num] = dp[parent_idx][tper_num];
-			else
-				dp[room_idx][tper_num] = max(dp[room_idx][tper_num], dp[parent_idx][tper_num - tper_required] + posb[room_idx]);
-			max_posb = max(max_posb, dp[room_idx][tper_num]);
+			else {
+				/* not choose or choose */
+				dp[room_idx][tper_num] = max(dp[parent_idx][tper_num], dp[parent_idx][tper_num - tper_required] + posb[room_idx]);
+			}
 		}
 		visited[room_idx] = 1; 
 		//debug_visit();
 		cal_max(room_idx);
+		/* clear dp[room_idx][] ?? */
+		memset(&dp[room_idx], 0, all_tper_num);
 		visited[room_idx] = 0;
-	}
+	} 
+
+	if (no_child)
+		max_posb = max(max_posb, dp[parent_idx][tper_num]);
+
 }
 
 int main()
@@ -106,34 +119,34 @@ int main()
 	int room_idx;
 	int x,y;
 
-		scanf("%d %d", &room_num, &all_tper_num);
-		max_posb = 0;
-		room_idx = 1;
-		while(room_idx <= room_num) {
-			scanf("%d %d", &bugs[room_idx], &posb[room_idx]);
-			room_idx ++;
-		}
+	scanf("%d %d", &room_num, &all_tper_num);
+	max_posb = 0;
+	room_idx = 1;
+	while(room_idx <= room_num) {
+		scanf("%d %d", &bugs[room_idx], &posb[room_idx]);
+		room_idx ++;
+	}
 
 
-		room_idx = 1;
+	room_idx = 1;
 		/* room_num -1 tunnel */
-		while(1) {
-			scanf("%d %d", &x, &y);
-			if (x == 0 && y == 0) 
-				break;
-			room[x][y] = 1;
-		}
+	while(1) {
+		scanf("%d %d", &x, &y);
+		if (x == -1 && y == -1) 
+			break;
+		room[x][y] = 1;
+	}
 
-		room_idx = 0;
-		for(; room_idx <= room_num; room_idx ++) {
-			room[room_idx][0] = 1;
-			room[0][room_idx] = 1;
-		}
+	room_idx = 0;
+	for(; room_idx <= room_num; room_idx ++) {
+		room[room_idx][0] = 1;
+		room[0][room_idx] = 1;
+	}
 
-		room_idx = 0;
-		visited[room_idx] = 1; 
-		cal_max(room_idx);
-		printf("%d\n", max_posb);
-		//debug_all();
+	room_idx = 0;
+	visited[room_idx] = 1; 
+	cal_max(room_idx);
+	printf("%d\n", max_posb);
+	//debug_all();
 	return 0;
 }
