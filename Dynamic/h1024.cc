@@ -42,35 +42,34 @@
  * 		v[k] > 0 max(dp[j][k - 1] + cal_one(v[j], v[k]): 0 < j <test_num -1)
  *
  *
+ *
+ *
+ * dp[n][i] means from 0 - i, have n pairs, max value, last item is v[i]
+ * 
+ * dp[n][i] = max(dp[n][i-1] + v[i], dp[n-1][j] + v[i] { n - 1 < j < i})
+ * [i - 1]  > n 
+ * 
+ * for sing max plus 
+ * dp[i] = max(v[i], dp[i] + v[i])
+ * dp[i] means last member is i's max
+ * max(dp[0-n])
+ * 
+ * Status: T
  */
  
 #include<stdio.h>
-typedef int var_t;
 #define MAX_NUM 1000 
 #define MAX_PAIR 1000 
 #define MIN_DATA (-1000)
-var_t v[MAX_NUM];
-var_t dp[MAX_NUM][MAX_PAIR];
+#define __INT64_C(c)  c ## LL
+#define INT64_MIN (-__INT64_C(9223372036854775807)-1)
+# define INT32_MIN              (-2147483647-1)
+int v[MAX_NUM];
+int dp[MAX_NUM][MAX_PAIR];
 int test_pair;
 int test_num;
-#define max(a, b) (a > b ? a : b)
-
-var_t cal_max(int start, int end)
-{
-	var_t ret = v[end];
-	var_t value = v[end];
-	end --;
-
-	//printf(" 1 s %d e %d max %d\n", start, end, ret);
-	while(end >= start)
-	{
-		value += v[end];
-		ret = max(ret, value); 
-		end--;
-	}
-	//printf(" 2 s %d e %d max %d\n", start, end, ret);
-	return ret;
-}
+#define MIN_INT 0xffffffffffffffff
+#define max(a, b) ((a) > (b) ? (a) : (b))
 
 void dp_print(int i)
 {
@@ -83,39 +82,39 @@ void dp_print(int i)
 
 void cal_dp() {
 
-	int i = 1;
-	int j = 1;
+	int i = 0;
+	int j = 0;
 	int k = 0;
-	int max_v = MIN_DATA;
-	var_t tmp;
+	int res = 0;
 
-	dp[i][j] = v[1];
+	printf("test_pair: %d\n", test_pair);
+	printf("test_num: %d\n", test_num);
+	dp[0][0] = v[0];
+	for (i = 0; i < test_pair ; i ++) {
+		for (j = 0; j < test_num; j++) {
+			if ((j - 1) < i)
+				continue;
 
-	for(i = 2; i <= test_num; i++) {
+			dp[i][j] = max(dp[i][j - 1] + v[j], v[j]);
+			printf("dp[%d][%d]:%d\n", i, j, dp[i][j]);
 
-		for(j = 1; j <= test_pair; j++) {
-
-			if (v[i] < 0) {
-
-				dp[i][j] = v[i];
-				//printf("v[i]:%d dp[i][j]: %d\n", v[i], dp[i][j]);
-				for(k = i - 1; k > 0; k--) {
-					tmp = ((dp[k][j - 1] == MIN_DATA) ? 0: dp[k][j - 1]) + v[i];
-					dp[i][j] = max(dp[i][j], tmp);
-				}
-				//printf("v[i]:%d dp[i][j]: %d\n", v[i], dp[i][j]);
-			} else {
-
-				for(k = i - 1; k > 0; k--) {
-					dp[i][j] = max(dp[i][j], (dp[k][j - 1] == MIN_DATA ? 0 : dp[k][j-1]) + cal_max(k + 1, i));
-					//printf(" dp[i][j]: %d cal k: %d i: %d v %d dp[k][j-1]: %d\n", dp[i][j], k, i, cal_max(k,i), dp[k][j-1]);
+			if (i >= 1) {
+				for (k = 0; k < j ; k++)  {
+					if (k < i - 1)
+						continue;
+					dp[i][j] = max(dp[i][j], dp[i - 1][k] + v[j]);
 				}
 			}
-			max_v = max(max_v, dp[i][j]);
 		}
-		//dp_print(i);
 	}
-	printf("max value %d\n", max_v);
+
+	printf("=======\n");
+	res = dp[test_pair -1][0];
+	for (j = 1; j < test_num; j++) {
+		printf("%d\n", dp[test_pair -1][j]);
+		res = max(dp[test_pair -1][j], res);
+	}
+	printf("%d\n", res);
 }
 
 int main()
@@ -123,12 +122,13 @@ int main()
 	int idx;
 	int i,j;
 
+	printf("%d\n", INT32_MIN);
 	scanf("%d %d", &test_pair, &test_num);
-	for(idx = 1; idx <= test_num; idx ++)
+	for(idx = 0; idx < test_num; idx ++)
 		scanf("%d", &v[idx]);
-	for(i = 0; i <= test_num; i++)
-		for(j = 0; j <= test_pair; j++)
-			dp[i][j] = MIN_DATA;
+	for(i = 0; i < test_pair; i++)
+		for(j = 0; j < test_num; j++)
+			dp[i][j] = INT32_MIN;
 	cal_dp();
 	return 0;
 
