@@ -58,9 +58,85 @@
   *  -GTTA-G
   */
 /* max str problem */
-#include<stdio.h>
+/* 
+ * dp[i][j] means the score of 
+ * between i - j 
+ * STATUS:
+ * T
+ *
+ */
+#include<iostream>
+#include<string>
+
+using namespace std;
+#define MAX_NUM 1000
+int dp[MAX_NUM][MAX_NUM] = {0};
+int max(int a, int b , int c)
+{
+	int r;
+	r = a > b ? a: b;
+	r = c > r?  c: r;
+	return r;
+}
+
+int cal_max_score(string a, string b)
+{
+	int a_s = a.size();
+	int b_s = b.size();
+	int i = 0;
+	int j = 0;
+	int score[100][100];
+
+	score['A']['A'] = 5;
+	score['A']['C'] = -1;
+	score['A']['G'] = -2;
+	score['A']['T'] = -1;
+	score['A']['-'] = -3;
+	score['C']['A'] = -1;
+	score['C']['C'] = 5; 
+	score['C']['G'] = -3; 
+	score['C']['T'] = -2; 
+	score['C']['-'] = -4;
+	score['G']['A'] = -2;
+	score['G']['C'] = -3;
+	score['G']['G'] = 5; 
+	score['G']['T'] = -2; 
+	score['G']['-'] = -2; 
+	score['T']['A'] = -1; 
+	score['T']['C'] = -2; 
+	score['T']['G'] = -2; 
+	score['T']['T'] = 5; 
+	score['T']['-'] = -1; 
+	score['-']['A'] = -3; 
+	score['-']['C'] = -4; 
+	score['-']['G'] = -2; 
+	score['-']['T'] = -1; 
+	score['-']['-'] = -1000000; 
+	dp[0][0] = 0;
+	for (i = 1; i<= a_s; i++)
+		dp[i][0] = dp[i -1][0] + score[a[i-1]]['-'];
+
+	for (j = 1; j<= b_s; j++)
+		dp[0][j] = dp[0][j - 1] + score['-'][b[j-1]];
+
+
+	for (i = 1; i <= a_s; i++) {
+		for (j = 1; j <= b_s; j++) {
+			dp[i][j] = max(dp[i-1][j-1] + score[a[i-1]][b[j-1]],
+				       dp[i-1][j] + score[a[i-1]]['-'],
+				       dp[i][j - 1] + score['-'][b[j-1]]);
+		}
+	}
+	printf("%d\n", dp[a_s][b_s]);
+	return 0;
+}
 
 int main()
 {
+	string a;
+	string b;
+	cin >> a;
+	cin >> b;
+	cal_max_score(a, b);
 	return 0;
 }
