@@ -74,10 +74,11 @@
 #include<iostream>
 #include<string>
 using namespace std;
-#define MAX 1001
+#define MAX 102
 int map[MAX][MAX] = {0};
 int dp[MAX] = {0};
 int patch[MAX] = {0};
+int cir[MAX] = {0};
 int v[MAX] = {0};
 
 int cal_i(int *v, int nr)
@@ -95,14 +96,15 @@ int cal_i(int *v, int nr)
 		}
 	}
 	i --;
-	while (i) {
 
-		printf("patch %d\n", patch[i] + 1);
-		i--;
+	printf("point : ", dp[nr - 1]);
+	printf("circuit : ");
+	while (i) {
+		printf("patch %d ->\n", patch[i] + 1);
+		i = patch[i];
 	}
 	
-	/* del with 0 */
-	return dp[nr - 1];
+	return 0;
 }
 
 int main()
@@ -124,7 +126,8 @@ int main()
 			scanf("%d %d", &b, &e);
 			map[b - 1][e - 1] = 1;
 		}
-		printf("%d\n", cal_i(v, nr_c));
+		printf("CASE %d#\n", ts);
+		cal_i(v, nr_c);
 		ts --;
 	}
 
