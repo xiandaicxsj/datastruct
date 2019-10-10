@@ -71,9 +71,8 @@
  *        STATUS
 *         T
  */
-#include<iostream>
-#include<string>
-using namespace std;
+#include<stdio.h>
+#include<string.h>
 #define MAX 102
 int map[MAX][MAX] = {0};
 int dp[MAX] = {0};
@@ -85,7 +84,10 @@ int cal_i(int *v, int nr)
 {
 	int j = 0;
 	int i = 0;
-	for (i = 0; i <= nr; i++) {
+	memset(dp, 0, nr);
+	memset(patch, 0, nr);
+	memset(cir, 0, nr);
+	for (i = 0; i < nr; i++) {
 		for (j = 0; j < i;  j++) {
 			if (map[j][i]) {
 				if (dp[j] + v[i] > dp[i]) {
@@ -97,12 +99,36 @@ int cal_i(int *v, int nr)
 	}
 	i --;
 
-	printf("point : ", dp[nr - 1]);
-	printf("circuit : ");
-	while (i) {
-		printf("patch %d ->\n", patch[i] + 1);
-		i = patch[i];
+	int max_c = dp[0];
+	int max_i = 0;
+	for(j = 1; j < nr; j++) {
+		if (dp[j] > max_c) {
+			max_c  = dp[j];
+			max_i = j;
+		}
 	}
+
+	int r = 1;
+	printf("point : %d\n", dp[max_i]);
+	printf("circuit : ");
+	if (max_i == 0)
+		goto skip;
+	cir[r] = max_i;
+	r++;
+	i = patch[max_i];
+	while (i) {
+		cir[r] = i;
+		i = patch[i];
+		r ++;
+	}
+skip:
+	r --;
+	printf("1->");
+	while(r) {
+		printf("%d->", cir[r] + 1);
+		r--;
+	}
+	printf("1\n");
 	
 	return 0;
 }
@@ -111,7 +137,8 @@ int main()
 {
 	int ts;
 	scanf("%d", &ts);
-	while (ts)
+	int t = 1;
+	while (t <= ts)
 	{
 		int nr_c = 0;
 		int nr_m = 0;
@@ -126,9 +153,9 @@ int main()
 			scanf("%d %d", &b, &e);
 			map[b - 1][e - 1] = 1;
 		}
-		printf("CASE %d#\n", ts);
+		printf("CASE %d#\n", t);
 		cal_i(v, nr_c);
-		ts --;
+		t ++ ;
 	}
 
 }
