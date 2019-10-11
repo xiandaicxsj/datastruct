@@ -58,7 +58,16 @@
  *        Statistic | Submit | Discuss | Note
  *        Home | Top	Hangzhou Dianzi University Online Judge 3.0
  *        Copyright © 2005-2019 HD 
+ *        thoughts:
+ *        dp[i][j] means Min distance [1 : i] resturants has j depot.  
+ *        dp[i][j]  = min(dp[k][j-1], + dis[k+1][i])  ( j - 1 < k < i )
+ *        dis[i][j] means put 1 depot from  i to j, the distance is ??
+ *
+ *        Previous issue:
+ *        开始认为 dp[i][j] 代表的是选中j为仓库的情况下的最小值，这样认为的原因是没有选对
+ *        
  */
+#if 0
 #include<stdio.h>
 #define MAX 100000
 #define ABS(value) (value > 0 ? value : -value)
@@ -97,47 +106,71 @@ int cal1(int k, int n)
 		}
 		return sum;
 }
+
+#endif
+#include<stdio.h>
+
+#define MAX_V 1000000
+#define min(a, b) ((a) > (b) ? (b) : (a))
+/* caculate if we place on deposit between b and e */
+int dis(int b, int e)
+{
+	int sum = 0;
+	int i = b;
+	int j = e;
+	if (b == e)
+		return 0;
+
+	for(i = b; i <= j; i++)
+		sum += (pos[i] - pos[e]);
+	r = sum;
+
+	for(i = b + 1; i <= j; i++) {
+		sum = sum + (i - b) * (pos[i] - pos[i - 1])
+			- (e - i + 1)  * (pos[i] - pos[i - 1]);
+		r = min(r, sum);
+	}
+
+	return r;
+}
+
+int cal_min(int n, int k)
+{
+	int i = 0;
+	int k1 = 0;
+	int j = 0;
+
+	for (k1 = 0; k1 <= k; k1++)
+		for (i = 1; i <= n; i++) {
+			if (k1 >= i)
+				dp[i][k] = 0;
+			else
+				dp[i][k] = MAX_V;
+		}
+
+	for (k1 = 1; k1 <= k; k1++) {
+		for (i = 1; i <= n; i++)  {
+			if (i <= k1)
+				continue;
+			for (j = k1 - 1; j < i; j++)
+				dp[i][k1] = min(dp[i][k1], dp[j][k1 - 1] + dis(j + 1, i));
+		}
+	}
+}
+
 int main()
 {
 	int n;
 	int k;
-	int i;
-	int j;
-	while ( scanf("%d %d", &n, &k) && n && k)
-	{
-		i = 0;
-		j = 0;
-		for (; i<n; i++)
-		{
-				scanf("%d", &(pos[i]));
-		}
-		int m;
-		int min= MAX;
-		for(i=0; i<n; i++)
-		{
-				for (j = 0; j<k; j++)
-				{
-						if( j>i )
-							continue;
 
-						if( j==0)
-						{
-							dp[i][j] =cal1(i,n);
-							continue;
-						}
-						for (m=0; m< i; m++)
-						{
-								if ( j-1 <= m)
-								{
-									printf("%d times\n", j);
-									dp[i][j] =cal(dp[m][j-1],m, i, n);
-								}
-						}
-						if (j == k-1)
-							min= MINA(dp[i][j], min);
-				}
-		}	
-		printf("%d", min);
+	while ( scanf("%d %d", &n, &k) && n && k) {
+		int i = 1;
+
+		while (i < n) {
+			scanf("%d", &pos[i]);
+			i ++;
+		}
+		cal_min(n, k);
 	}
 	return 0;
 }
