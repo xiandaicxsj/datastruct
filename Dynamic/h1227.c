@@ -110,6 +110,8 @@ int cal1(int k, int n)
 #endif
 #include<stdio.h>
 
+int dp[201][31] = {0};// dp[m][n] 
+int pos[201];
 #define MAX_V 1000000
 #define min(a, b) ((a) > (b) ? (b) : (a))
 /* caculate if we place on deposit between b and e */
@@ -118,11 +120,12 @@ int dis(int b, int e)
 	int sum = 0;
 	int i = b;
 	int j = e;
+	int r;
 	if (b == e)
 		return 0;
 
 	for(i = b; i <= j; i++)
-		sum += (pos[i] - pos[e]);
+		sum += (pos[i] - pos[b]);
 	r = sum;
 
 	for(i = b + 1; i <= j; i++) {
@@ -134,7 +137,7 @@ int dis(int b, int e)
 	return r;
 }
 
-int cal_min(int n, int k)
+void cal_min(int n, int k)
 {
 	int i = 0;
 	int k1 = 0;
@@ -142,35 +145,65 @@ int cal_min(int n, int k)
 
 	for (k1 = 0; k1 <= k; k1++)
 		for (i = 1; i <= n; i++) {
-			if (k1 >= i)
-				dp[i][k] = 0;
+			if (i <= k1)
+				dp[i][k1] = 0;
 			else
-				dp[i][k] = MAX_V;
+				dp[i][k1] = MAX_V;
 		}
 
-	for (k1 = 1; k1 <= k; k1++) {
+#ifdef DEBUG
+	for (k1 = 0; k1 <= k; k1++) {
 		for (i = 1; i <= n; i++)  {
-			if (i <= k1)
-				continue;
-			for (j = k1 - 1; j < i; j++)
-				dp[i][k1] = min(dp[i][k1], dp[j][k1 - 1] + dis(j + 1, i));
+			printf("dp[%d][%d]:%d ",i, k1, dp[i][k1]);
 		}
 	}
+#endif
+	for (k1 = 1; k1 <= k; k1++) {
+		for (i = 1; i <= n; i++)  {
+#ifdef DEBUG
+			printf("cal dp[%d][%d]\n", i, k1);
+#endif
+			if (i <= k1)
+				continue;
+			for (j = k1 - 1; j < i; j++) {
+#ifdef DEBUG
+				printf("\t prev dp[%d][%d]:%d\n",i, k1, dp[i][k1]);
+#endif
+				dp[i][k1] = min(dp[i][k1], dp[j][k1 - 1] + dis(j + 1, i));
+#ifdef DEBUG
+				printf("\t dp[%d][%d]:%d by checking dp[%d][%d]:%d\n",i, k1, dp[i][k1], j, k1 -1, dp[j][k1-1]);
+#endif
+			}
+		}
+	}
+
+#ifdef DEBUG
+	for (k1 = 1; k1 <= k; k1++) {
+		for (i = 1; i <= n; i++)  {
+			printf("dp[%d][%d]:%d ",i, k1, dp[i][k1]);
+		}
+		printf("\n");
+	}
+#endif
+	printf("Total distance sum = %d\n", dp[n][k]);
 }
 
 int main()
 {
 	int n;
 	int k;
+	int c = 1;
 
-	while ( scanf("%d %d", &n, &k) && n && k) {
+	while (scanf("%d %d", &n, &k) && n && k) {
 		int i = 1;
 
-		while (i < n) {
+		while (i <= n) {
 			scanf("%d", &pos[i]);
-			i ++;
+			i++;
 		}
+		printf("Chain %d\n", c);
 		cal_min(n, k);
+		c++;
 	}
 	return 0;
 }
