@@ -36,6 +36,10 @@
  *     Huge input, scanf and dynamic programming is recommended.
  */
 
+/* 
+ * dp[t][k] =  max(dp[t][k - 1], dp[t-1][j] + sum[k]- sum[j])
+ *
+ */
 /* thinking 
  * dp[test_num][k] means the max sum value of (0 - num) have k test_pair. end with l
  * dp[test_num][k] = v[k] < 0 max(dp[j][k]) 0 < j <num -1
@@ -78,6 +82,20 @@ void dp_print(int i)
 	for(j = 1; j <= test_pair; j++)
 		printf(" %d", dp[i][j]);
 	printf("\n");
+}
+
+void cal_dp1()
+{
+	int tp = 0;
+	int tn = 0;
+
+	for (tp = 1; tp <= test_pair; tp++)
+		for (tn = 1; tn <= test_num; tn++) {
+			dp[tp][tn] = dp[tp][tn - 1];
+			for (k = 0; k < tn; k++)
+				dp[tp][tn] = max(tp[tp][tn], dp[tp - 1][k] + (sum[tn] - sum[k]));
+	}
+
 }
 
 void cal_dp() {
