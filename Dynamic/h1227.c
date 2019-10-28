@@ -66,6 +66,8 @@
  *        Previous issue:
  *        开始认为 dp[i][j] 代表的是选中j为仓库的情况下的最小值，这样认为的原因是没有选对
  *        
+ *        STATUS:
+ *        AC
  */
 #if 0
 #include<stdio.h>
@@ -186,6 +188,7 @@ void cal_min(int n, int k)
 	}
 #endif
 	printf("Total distance sum = %d\n", dp[n][k]);
+	printf("\n");
 }
 
 int main()
