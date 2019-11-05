@@ -91,34 +91,42 @@ void cal_dp1()
 	int tn = 0;
 	int t = 0;
 	int k = 0;
+	int next = 0;
 
 	sum[tn] = 0;
 	for (tn = 1; tn <= test_num; tn++) {
 		t += v[tn - 1];
 		sum[tn] += t;
-		dp[0][tn] = 0;
+		dp[0][tn] = INT32_MIN;
 	}
-	for (tp = 1; tp <= test_pair; tp++)
-		dp[tp][0] = 0;
 
-	dp[0][0] = 0;
+	for (tp = 1; tp <= test_pair; tp++)
+		for (tn = 1; tn <= test_num; tn++) {
+		dp[tp][tn] = INT32_MIN;
+	}
+
+	dp[0][0] = INT32_MIN;
 
 	for (tp = 1; tp <= test_pair; tp++)
 		for (tn = 1; tn <= test_num; tn++) {
 			if (tn < tp)
 				continue;
 
+			printf("check dp[%d][%d]\n", tp, tn);
 			dp[tp][tn] = dp[tp][tn - 1];
-			for (k = 0; k < tn; k++)
-				dp[tp][tn] = max(dp[tp][tn], dp[tp - 1][k] + (sum[tn] - sum[k]));
+			printf(" dp[%d][%d] %d\n", tp, tn, dp[tp][tn]);
+			for (k = 0; k < tn; k++) {
+				next = dp[tp-1][k] == INT32_MIN ? sum[tn] - sum[k] : dp[tp - 1][k] + sum[tn] - sum[k];
+				printf("dp[%d][%d]:%d-next:%d: sum:%d\n", tp - 1, k, dp[tp-1][k], next, sum[tn]-sum[k]);
+				dp[tp][tn] = max(dp[tp][tn], next);
+			}
+			printf("dp[%d][%d]:%d\n", tp, tn, dp[tp][tn]);
 		}
 
 
-#if 0
 	for (tp = 1; tp <= test_pair; tp++)
 		for (tn = 1; tn <= test_num; tn++)
 			printf("dp[%d][%d]:%d\n", tp, tn, dp[tn][tp]);
-#endif
 	printf("%d\n", dp[test_pair][test_num]);
 
 }
