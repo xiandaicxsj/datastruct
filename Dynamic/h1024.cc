@@ -88,6 +88,7 @@ void dp_print(int i)
 }
 #endif
 
+#ifdef CASE2
 void cal_dp1()
 {
 	int tp = 0;
@@ -143,6 +144,7 @@ void cal_dp1()
 	printf("%d\n", dp[test_pair][test_num]);
 
 }
+#endif
 
 void cal_dp() {
 
@@ -150,22 +152,37 @@ void cal_dp() {
 	printf("test_pair: %d\n", test_pair);
 	printf("test_num: %d\n", test_num);
 	dp[0][0] = v[0];
+	int maxv;
+	int sum = 0;
+	int i = 0;
+	int j = 0;
+
+	for (i = 1; i <= test_num; i++) {
+		sum += v[i];
+		dp[i][i] = sum;
+		dp[0][i] = INT32_MIN;
+	}
+
 	for (i = 1; i <= test_pair ; i ++) {
-		dp[i][j] =  dp[i][j-1] + v[j];
+		maxv = dp[i][i];
 		for (j = i + 1; j <= test_num; j++) {
-			for (k = i + 1; k < j; k++) {
-				dp[i][j] =  max(dp[i - 1][k] + v[j], dp[i][j]);
-			}
+			maxv =  max(dp[i - 1][j - 1], maxv);
+			dp[i][j] = maxv + v[j];
+			printf("j:%d v:%d\n", j, dp[i][j]);
 		}
 	}
 
 	printf("=======\n");
-	res = dp[test_pair -1][0];
-	for (j = 1; j < test_num; j++) {
-		printf("%d\n", dp[test_pair -1][j]);
-		res = max(dp[test_pair -1][j], res);
+	maxv = dp[test_pair][test_num];
+	for (j = 1; j <= test_num; j++) {
+		maxv = max(dp[test_pair][j], maxv);
 	}
-	printf("%d\n", res);
+	int tp;
+	int tn;
+	for (tp = 1; tp <= test_pair; tp++)
+		for (tn = 1; tn <= test_num; tn++)
+			printf("dp[%d][%d]:%d\n", tp, tn, dp[tn][tp]);
+	printf("%d\n", maxv);
 }
 
 int main()
@@ -180,7 +197,7 @@ int main()
 		for(i = 0; i <= test_pair; i++)
 			for(j = 0; j <= test_num; j++)
 				dp[i][j] = INT32_MIN;
-		cal_dp1();
+		cal_dp();
 	}
 	return 0;
 
