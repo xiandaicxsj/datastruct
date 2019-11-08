@@ -61,6 +61,7 @@
  * Status: T
  */
  
+#if 0
 #include<stdio.h>
 #define MAX_NUM 1000 
 #define MAX_PAIR 1000 
@@ -146,10 +147,10 @@ void cal_dp1()
 }
 #endif
 
+#if 0
 void cal_dp() {
 
 
-	printf("test_pair: %d\n", test_pair);
 	printf("test_num: %d\n", test_num);
 	dp[0][0] = v[0];
 	int maxv;
@@ -184,6 +185,60 @@ void cal_dp() {
 			printf("dp[%d][%d]:%d\n", tp, tn, dp[tn][tp]);
 	printf("%d\n", maxv);
 }
+#endif
+
+#endif 
+#include<stdio.h>
+#define MAX_NUM 1000 
+#define max(a, b) ((a) > (b) ? (a) : (b))
+int v[MAX_NUM];
+int pre_max[MAX_NUM];
+int test_pair;
+int test_num;
+void cal_dp2(int test_pair, int test_num) 
+{
+	int i = 0;
+	int j = 0;
+	int k = 0;
+	int tmp;
+	int maxv;
+
+	for (i = 1; i <= test_num ; i ++)
+		pre_max[i] = 0;
+	for (i = 1; i <= test_pair ; i ++) {
+		tmp = 0;
+		for (k = 1; k <= i; k++)
+			tmp += v[k];
+		maxv = tmp;
+		for (j = i + 1; j <= test_num; j++) {
+			//tmp = max(maxv, pre_max[j - 1]) + v[j];
+			tmp = max(tmp, pre_max[j - 1]) + v[j];
+			pre_max[j - 1] = maxv;
+			maxv = max(maxv, tmp);
+		}
+	}
+
+	printf("%d\n", maxv);
+
+}
+
+void DP(int m, int n)
+{
+	for(int i = 1; i <= m; ++i)
+	{
+		int tmp = 0;
+		for(int k = 1; k <= i; ++k)
+			tmp += v[k];
+		pre_max[n] = tmp;
+			         
+	         for(int j = i+1; j <= n; ++j) {
+			tmp = max(pre_max[j-1], tmp) + v[j];
+			pre_max[j-1] = pre_max[n];
+			pre_max[n] = max(pre_max[n], tmp);         
+		 }
+     }
+     printf("%d\n", pre_max[n]);
+}
 
 int main()
 {
@@ -194,10 +249,8 @@ int main()
 	while(~scanf("%d %d", &test_pair, &test_num)) {
 		for(idx = 1; idx <= test_num; idx ++)
 			scanf("%d", &v[idx]);
-		for(i = 0; i <= test_pair; i++)
-			for(j = 0; j <= test_num; j++)
-				dp[i][j] = INT32_MIN;
-		cal_dp();
+		//cal_dp2(test_pair, test_num);
+		DP(test_pair, test_num);
 	}
 	return 0;
 
