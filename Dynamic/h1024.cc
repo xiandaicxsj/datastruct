@@ -179,7 +179,7 @@ void cal_dp() {
 		maxv = max(dp[test_pair][j], maxv);
 	}
 	int tp;
-	int tn;
+2int tn;
 	for (tp = 1; tp <= test_pair; tp++)
 		for (tn = 1; tn <= test_num; tn++)
 			printf("dp[%d][%d]:%d\n", tp, tn, dp[tn][tp]);
@@ -189,7 +189,7 @@ void cal_dp() {
 
 #endif 
 #include<stdio.h>
-#define MAX_NUM 1000 
+#define MAX_NUM 1000002
 #define max(a, b) ((a) > (b) ? (a) : (b))
 int v[MAX_NUM];
 int pre_max[MAX_NUM];
@@ -249,8 +249,8 @@ int main()
 	while(~scanf("%d %d", &test_pair, &test_num)) {
 		for(idx = 1; idx <= test_num; idx ++)
 			scanf("%d", &v[idx]);
-		//cal_dp2(test_pair, test_num);
-		DP(test_pair, test_num);
+		cal_dp2(test_pair, test_num);
+		//DP(test_pair, test_num);
 	}
 	return 0;
 
