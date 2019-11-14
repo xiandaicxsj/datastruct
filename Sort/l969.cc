@@ -44,17 +44,98 @@
  *   27,116
  */
 
+#if 0
 class Solution {
 	public:
 	vector<int> pancakeSort(vector<int>& A) {
 		            
 	}
 };
+#endif
 
 /**
  *  * Note: The returned array must be malloced, assume caller calls free().
  *   */
-int* pancakeSort(int* A, int ASize, int* returnSize){
+/* return index of max value of A */
+#include<stdio.h>
+#include<stdlib.h>
+int find_max(int * A, int b, int e)
+{
+	int max_idx = b;
+	int max = A[b];
+	int i = b;
 
+	while(i <= e) {
+		if (A[i] > max) {
+			max = A[i];
+			max_idx = i;
+		}
+
+		i++;
+	}
+	return max_idx;
+
+}
+
+int filp(int *A, int b, int e)
+{
+	int tmp;
+	while(b <= e) {
+		tmp = A[b];
+		A[b] = A[e];
+		A[e] = tmp;
+		e--;
+		b++;
+	}
+}
+
+int* pancakeSort(int* A, int ASize, int* returnSize){
+	int i = 0;
+	int r_i = 0;
+	int *tmp_array =  (int *)malloc(10 * sizeof(int) * ASize);
+	int *r_array;
+	int max;
+
+	i = ASize - 1;
+	while (i >= 0) {
+		max = find_max(A, 0, i);
+		filp(A, 0, max);
+		tmp_array[r_i] = max + 1;
+		r_i ++;
+		filp(A, 0, i);
+		tmp_array[r_i] =  i + 1;
+		r_i ++;
+
+		i--;
+	}
+
+	/* check r_i == 0; */
+	r_array = (int *)malloc(sizeof(int) * r_i);
+	for (i = 0; i < r_i; i++)
+		r_array[i] = tmp_array[i];
+
+	free(tmp_array);
+	*returnSize = r_i;
+
+	return r_array;
+	
+}
+
+int array[1000];
+int main()
+{
+	int size;
+	int r;
+	int *ra;
+	scanf("%d",  &size);
+	for (int i = 0; i < size; i++)
+		scanf("%d", &array[i]);
+	ra = pancakeSort(array, size, &r);
+	for (int i = 0; i < r; i++)
+		printf("%d ", ra[i]);
+	printf("\n");
+
+	for (int i = 0; i < size; i++)
+		printf("%d ", array[i]);
 }
 
