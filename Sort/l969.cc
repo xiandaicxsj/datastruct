@@ -97,7 +97,7 @@ int* pancakeSort(int* A, int ASize, int* returnSize){
 	int max;
 
 	i = ASize - 1;
-	while (i >= 0) {
+	while (i >= 1) {
 		max = find_max(A, 0, i);
 		filp(A, 0, max);
 		tmp_array[r_i] = max + 1;
