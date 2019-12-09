@@ -51,6 +51,7 @@ int maximumGap(int* nums, int numsSize){
 
 	if (numsSize < 2)
 		return 0;
+
 	max_v = nums[0];
 	min_v = nums[0];
 	for (i = 1; i < numsSize; i++)  {
@@ -59,6 +60,9 @@ int maximumGap(int* nums, int numsSize){
 		if (nums[i] < min_v)
 			min_v = nums[i];
 	}
+	if (numsSize == 2)
+		return max_v - min_v;
+
 
 	ARRAY_SIZE = (max_v - min_v) + 1;
 	ARRAY_SIZE = ARRAY_SIZE / sizeof(unsigned int) + 1;
