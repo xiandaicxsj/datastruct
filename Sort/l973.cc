@@ -44,12 +44,23 @@
  *   Submissions
  *   230,672
  *
+ *   n * k
  */
 /**
      * Return an array of arrays of size *returnSize.
      *  * The sizes of the arrays are returned as *returnColumnSizes array.
      *   * Note: Both returned array and *columnSizes array must be malloced, assume caller calls free().
      *    */
+
+
+
+
+
+/* 
+ * sort, then choose k higher elem
+ * 	heap sort
+ * or just  pick a elem can compare it to returnColumSize[]
+ */
 int** kClosest(int** points, int pointsSize, int* pointsColSize, int K, int* returnSize, int** returnColumnSizes){
 
 }
