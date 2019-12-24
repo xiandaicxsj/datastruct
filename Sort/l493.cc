@@ -110,6 +110,7 @@ int main()
 #include<iostream>
 #include<cstdlib>
 #include<vector>
+#include<algorithm>
 using namespace std;
 
 class Solution {
@@ -117,45 +118,49 @@ public:
 
 
 	void bsi_insert(int idx) {
-		cout <<"bsi_insert:" <<idx<<endl;
-		while (idx < size) {
+		while (idx <= size) {
 			bsi[idx] ++;
 			idx += (idx & -idx); 
 		}
 	}
 
 	int bsi_sum(int idx) {
-		//cout <<"bsi_sum:" <<idx;
 		int sum = 0;
+		idx = idx > size ? size : idx;
 		while (idx > 0) {
+			cout<<"idx:"<<idx<<endl;
 			sum += bsi[idx];
 			idx -= (idx & -idx);
 		}
-		cout <<" sum:"<<sum<<endl;
 		return sum;
 	}
 
 	int *bsi;
 	int size;
 
-	int INDEX(vector<int>& nums, int v) {
-		int b = 0;
-		int e = nums.size() - 1;
+	int INDEX(vector<int>& nums, long v) {
+		int l = 0;
+		int r = nums.size() - 1;
 		int m;
-		while (b < e) {
-			m = (b + e) / 2;
-			if (nums[m] > v)
-				b = m + 1;
-			else { if (nums[m] < v)
-				 e = m - 1;
-			       else  
-				  return m + 1;
+		int last;
+		while (l <= r) {
+			m = l + ((r - l) >> 1);
+			if (v < (long )nums[m]) {
+				l = m + 1;
+				last = l;
+			} else{ 
+				if ((long)v > (long) nums[m]) {
+					r = m -1;
+					last = r;
+				} else {
+					last = m;
+					break;
+				}
+
 			}
+
 		}
-		if (v > nums[b])
-			return b;
-		if (v < nums[b])
-			return b + 1;
+		return last + 1;
 	}
 
 	int reversePairs(vector<int>& nums) {
@@ -164,13 +169,11 @@ public:
 		int res = 0;
 		int idx;
 
-		cout<<"reversePairs"<<endl;
 		sort(nc.begin(), nc.end(), greater<int>());
 		size = nc.size();
 		bsi = (int *) malloc((size + 1)* sizeof(int));
 		memset(bsi, 0, sizeof(int) * (size + 1));
 
-		cout << "begin main loop "<< size <<" " << i << endl;
 		for (i = 0; i < size; i++) {
 #if 0
 			cout << "lower_bound:" <<" ";
@@ -182,13 +185,19 @@ public:
 			bsi_insert(lower_bound(nc.begin(), nc.end(), nc[i]) - nc.begin() + 1);
 #endif
 			int sum = 0;
-			idx = INDEX(nc, 2 *nums[i] +1);
+			idx = INDEX(nc, (long) nums[i] * 2 +1);
 			sum = bsi_sum(idx);
-			cout<<"ai: "<<nums[i]<<" check "<< 2 *nums[i] + 1<<" found idx: "<<idx<<" sum is:"<<sum;
+	#ifdef DEBUG
+			cout<<"ai: "<<nums[i]<<" check "<< 2147483647 * 2 - 1  <<" found idx: "<<idx<<" sum is:"<<sum;
+
+	#endif
 			res += sum;
+	#ifdef DEBUG
 			cout<< " res:"<<res<<endl;
+	#endif
 			bsi_insert(INDEX(nc, nums[i]));
 		}
+		free(bsi);
 
 		return res;
 	}
@@ -212,6 +221,7 @@ int main()
 		nums.push_back(t);
 		i++ ;
 	}
-	cout << s.reversePairs(nums);
+	cout << 0xffffffff;
+	cout << "result " <<s.reversePairs(nums) <<endl;
 
 }
