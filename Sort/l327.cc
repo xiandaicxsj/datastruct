@@ -96,19 +96,31 @@ class Solution {
 				r = sums[i] - lower;
 				l = sums[i] - upper;
 
+				if (sums[i] >= lower && sums[i] <= upper)
+					ret ++;
 				/* 
 				rp = (lower_bound(sums_sort.begin(), sums_sort.end(), r) - sums_sort.begin());
 				lp = (lower_bound(sums_sort.begin(), sums_sort.end(), l) - sums_sort.begin());
 				*/
 				rp = (upper_bound(sums_sort.begin(), sums_sort.end(), r) - sums_sort.begin());
-				lp = (upper_bound(sums_sort.begin(), sums_sort.end(), l) - sums_sort.begin());
+				lp = (lower_bound(sums_sort.begin(), sums_sort.end(), l) - sums_sort.begin());
+
+				/* rp = (upper_bound) -1 + 1  
+				 * upper_bound get idx sums_sort[idx] > v, but we need to get v's idx, so idx --,
+				 * idx is the array idx. idx + 1 is used for bsi_sum(). 
+				 *
+				 * lp = (lower_bound) -1 + 1
+				 * lower_bound get idx sums_osrt[idx] >= v, so for == v, we need to idx --, because we need to
+				 * cover ==v case. for >v , idx--, means we need to get sums_sort[idx] < v. so idx --.
+				 */
 				cout << "check "<< sums[i]<<endl;
 				cout << "r:l "<<r<<":"<<l<<endl;
 				cout << "rp:lp "<<rp<<":"<<lp<<endl;
 
 				ret += bsi_sum(rp) - bsi_sum(lp);
-				cout << "ret :"<<ret<<endl;
 				bsi_insert(lower_bound(sums_sort.begin(), sums_sort.end(), sums[i]) - sums_sort.begin());
+				cout << "ret :"<<ret<<endl;
+				//bsi_insert(lower_bound(sums_sort.begin(), sums_sort.end(), sums[i]) - sums_sort.begin());
 			}
 			free(bsi);
 
