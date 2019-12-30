@@ -36,7 +36,9 @@ class Solution {
 
 #ifdef BIT
 	void bsi_insert(int idx) {
+	#ifdef DEBUG
 		cout<<"inseridx: "<<idx<<endl;
+	#endif
 		idx ++;
 		while (idx <= size) {
 			bsi[idx] ++;
@@ -52,7 +54,9 @@ class Solution {
 			sum += bsi[idx];
 			idx -= (idx & -idx);
 		}
+	#ifdef DEBUG
 		cout<<"idx:sum: "<<t_idx<<":"<<sum<<endl;
+	#endif
 		return sum;
 	}
 
@@ -74,25 +78,17 @@ class Solution {
 
 			for(i = 0; i < nums.size(); i++) {
 				t_sum += nums[i];
-				cout<<i<<": "<<t_sum<<endl;
 				sums.push_back(t_sum);
 				sums_sort.push_back(t_sum);
 			}
 
-			cout << "1"<<endl;
 			bsi = (int *) malloc(sizeof(int) * size);
 			memset(bsi, 0, sizeof(int) * size);
 
 			sort(sums_sort.begin(), sums_sort.end());
-			cout << "sort"<<endl;
-			for (i = 0; i< sums_sort.size(); i++) {
-				cout<<sums_sort[i]<<endl;
-			}
-			cout << "after sort"<<endl;
 			/*  ----  */
 			for (i = 0; i < sums.size(); i++) {
 				/* this part '-' change to '+' */
-				cout <<"-----------"<<endl;
 				r = sums[i] - lower;
 				l = sums[i] - upper;
 
@@ -113,13 +109,14 @@ class Solution {
 				 * lower_bound get idx sums_osrt[idx] >= v, so for == v, we need to idx --, because we need to
 				 * cover ==v case. for >v , idx--, means we need to get sums_sort[idx] < v. so idx --.
 				 */
+				#ifdef DEBUG
 				cout << "check "<< sums[i]<<endl;
 				cout << "r:l "<<r<<":"<<l<<endl;
 				cout << "rp:lp "<<rp<<":"<<lp<<endl;
+				#endif
 
 				ret += bsi_sum(rp) - bsi_sum(lp);
 				bsi_insert(lower_bound(sums_sort.begin(), sums_sort.end(), sums[i]) - sums_sort.begin());
-				cout << "ret :"<<ret<<endl;
 				//bsi_insert(lower_bound(sums_sort.begin(), sums_sort.end(), sums[i]) - sums_sort.begin());
 			}
 			free(bsi);
