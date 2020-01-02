@@ -65,10 +65,15 @@ class Solution {
 	int *bsi;
 	int size;
 #endif
+#define DEBUG
 #ifdef MERGE_SORT
 	int ret;
+	/* how to deal with 2 problem
+	 * 1. sum[i] may be chosen too.
+	 * 2. sum[i] may be duplicate with sum[j], then how to deal with this.
+	 */
 	void merge_sort(vector<int> &sums, int l, int r, int low, int upp) {
-		int m = l +  (r-l) /2;
+		int m = (l + r) >> 1;
 		int sr = 0;
 		int lv = 0;
 		int rv = 0;
@@ -77,15 +82,33 @@ class Solution {
 		int rp = 0;
 
 		if (l >= r) {
+			if (sums[r] >= low && sums[r] <= upp) {
+				ret++;
+			}
 		#ifdef DEBUG
 			cout <<"dsdfsdf"<<"l:r"<< l<<":" << r << ":"<<m<<endl;
 		#endif
 			return;
 		}
+		cout<<l<<"---->"<<m<<"---->"<<r<<endl;
 		merge_sort(sums, l, m, low, upp);
 		merge_sort(sums, m + 1, r, low, upp);
 	#ifdef DEBUG
-		cout <<"l:r"<< l<<":" << r << ":"<<m<<endl;
+		cout<<l<<"------->"<<r<<endl;
+		cout <<"left: "<<l<<"->" <<m<< ":"<<m<<endl;
+		int t_l,t_r; 
+		t_l = l;
+		t_r = r;
+		while(t_l <= m) {
+			cout<<"sums["<<t_l<<"]:"<<sums[t_l]<<endl;
+			t_l ++;
+		}
+
+		cout <<"right: "<<m+1<<"->" <<r<< ":"<<m<<endl;
+		while(t_l <= r) {
+			cout<<"sums["<<t_l<<"]:"<<sums[t_l]<<endl;
+			t_l ++;
+		}
 	#endif
 	
 		for (sr = m + 1; sr <= r; sr++) {
@@ -95,8 +118,8 @@ class Solution {
 			lv = sums[sr] - upp;
 			rv = sums[sr] - low;
 
-			rp = upper_bound(sums.begin() + l, sums.begin() + m, rv) - sums.begin(); /* sr-low */
-			lp = lower_bound(sums.begin() + l, sums.begin() + m, lv) - sums.begin(); /* sr-upp */
+			rp = upper_bound(sums.begin() + l, m >= sums.size() - 1 ? sums.end() : sums.begin() + m + 1, rv) - sums.begin(); /* sr-low */
+			lp = lower_bound(sums.begin() + l, m >= sums.size() - 1 ? sums.end() : sums.begin() + m + 1, lv) - sums.begin(); /* sr-upp */
 
 		#ifdef DEBUG
 			cout <<"sr: "<<sr;
@@ -107,9 +130,22 @@ class Solution {
 			cout <<endl;
 		#endif
 			ret += (rp - lp);
+		#ifdef DEBUG
+			cout<<"ret:"<<ret<<endl;
+		#endif
 		}
 
 		inplace_merge(sums.begin() + l, sums.begin() + m, sums.begin() + r);
+	#ifdef DEBUG
+		t_l = l; 
+		t_r = r;
+		cout<<"after merge:"<<endl;
+		while(t_l <= t_r) {
+			cout<<"sums["<<t_l<<"]:"<<sums[t_l]<<endl;
+			t_l ++;
+		}
+
+	#endif
 		/* merge func */
 		/* merge res[l-m] res[m+1, r] */
 	}
