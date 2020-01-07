@@ -31,16 +31,52 @@
  */
 
 /* balance search tree */
+struct node {
+	int v;
+	struct node *l;
+	struct node *r;
+};
 
 class Solution {
 	public:
 	struct node *root;
 
 	/* sort nums */
-	/* then each time get upper/lower bound, check related idx 
-	 * then get ...
+	/* Questions:
+	 * 1. we need to keep k values sorted windows 
+	 * 2. we need to know the idx of the value
+	 * 3. 
 	 * keep k values windows.
 	 */
+	/* balance tree */
+	void insert(int v) {
+
+	}
+
+	struct remove(struct node *node, int v) {
+		struct node *ret;
+		if (!node)
+			return NULL;
+		if (v > node->v)
+			node->r = remove(node->r, v);
+		if (v < node->v)
+			node->l = remove(node->l, v);
+		if (v == nodev->v) {
+			if (!node->l && !node->r)
+				ret = NULL;
+			/* left is NULL */
+			if (!node->l)
+				ret = node->r;
+
+			if (!node->r)
+				ret = node->l;
+			if (node
+
+		}
+		
+		return node;
+	}
+
 	bool containsNearbyAlmostDuplicate(vector<int>& nums, int k, int t) {
 		int i = 0;
 		int l,h;
@@ -50,7 +86,6 @@ class Solution {
 		for (i = 0; i<nums.size(); i++) {
 			if (i == 0)
 				continue;
-
 		}
 	}
 };
