@@ -39,8 +39,18 @@ struct node {
 
 class Solution {
 	public:
+#ifdef RITH
 	struct node *root;
 
+	struct node *alloc_node(int v) {
+		struct node *ret = new(node);
+		ret->l = ret->r = NULL;
+		ret->v = v;
+		return ret;
+	}
+	int lower_bound(int v) {
+
+	}
 	/* sort nums */
 	/* Questions:
 	 * 1. we need to keep k values sorted windows 
@@ -50,31 +60,95 @@ class Solution {
 	 */
 	/* balance tree */
 	void insert(int v) {
+		struct node *new_node = alloc_node(v); 
+		struct node *node = root;
+		struct node *parent = root;
+		if (!root) {
+			root = new_node; 
+			return;
+		}
 
+		while(node) {
+			parent = node;
+			if (v > node->v)
+				node = node->r;
+			else
+				node = node->l;
+		}
+
+		if (v > parent->v)
+			parent->r = new_node;
+		else
+			parent->l = new_node;
 	}
 
-	struct remove(struct node *node, int v) {
+	struct node *search(int v) {
+		struct node *node = root;
+
+		if (!node)
+			return NULL;
+
+		while(node) {
+			if (v > node->v)
+				node = node->r;
+			if (v == node->v)
+				return node;
+			if (v < node->v)
+				node = node->l;
+		}
+
+		return NULL;
+	}
+
+	struct node *remove(struct node *node, int v) {
 		struct node *ret;
+		struct node *left;
+		struct node *right;
 		if (!node)
 			return NULL;
 		if (v > node->v)
 			node->r = remove(node->r, v);
 		if (v < node->v)
 			node->l = remove(node->l, v);
+
 		if (v == nodev->v) {
-			if (!node->l && !node->r)
+
+			if (!node->l && !node->r) {
 				ret = NULL;
+				goto free;
+			}
+
 			/* left is NULL */
-			if (!node->l)
+			if (!node->l) {
 				ret = node->r;
+				goto free;
+			}
 
-			if (!node->r)
+			if (!node->r) {
 				ret = node->l;
-			if (node
+				goto free;
+			}
 
+			if (node->l && node->r) {
+				struct node *tmp;
+				left = node->l;
+				right = left->right;
+				left->right  = node->r;
+				tmp = left->right;
+
+				while(tmp->left) {
+					tmp = tmp->left;
+				}
+				tmp->left = right;
+
+				ret = node->l
+				goto free;
+			}
 		}
 		
-		return node;
+		free:
+			delete(node);
+			return ret;
 	}
 
 	bool containsNearbyAlmostDuplicate(vector<int>& nums, int k, int t) {
@@ -83,9 +157,21 @@ class Solution {
 		int j = 0;
 		int b = 0;
 		int e = b + k;
+		int windows  = 0;
 		for (i = 0; i<nums.size(); i++) {
-			if (i == 0)
-				continue;
+			/* check a
+			 * nums[i] - t
+			 * t - nums[i]
+			 * how to get the nums of range ???
+			 */
+			/* how to check */
+			insert(nums[i]);
+			windows ++;
+			if (windows > k) {
+				remove(nums[i- k]);
+				windows-- ;
+			}
+
 		}
 	}
 };
