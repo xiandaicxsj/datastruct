@@ -216,7 +216,7 @@ int superEggDrop(int K, int N){
 int main()
 {
 	int n, k;
-	scanf("%d %d", &n, &k);
+	scanf("%d %d", &k, &n);
 	printf("%d\n", superEggDrop(k, n));
 	return 0;
 }

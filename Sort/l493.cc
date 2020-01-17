@@ -128,7 +128,6 @@ public:
 		int sum = 0;
 		idx = idx > size ? size : idx;
 		while (idx > 0) {
-			cout<<"idx:"<<idx<<endl;
 			sum += bsi[idx];
 			idx -= (idx & -idx);
 		}
