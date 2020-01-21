@@ -17,10 +17,13 @@
  * 
  * AC
  * thinking:
- * as array sum is in increase order, make use of this we can use binary search to get nlog(n).
  * below is o(n). because each elem is push and pop 2 times. the sercret is when sum[i] - sum[d.front()] >= k,
  * then it means sum[j] (j > i) also satisfy the condition sum[j] - sum[d.front()] >= k, but j is bigger than
  * i, so we will not choose j. So just pop_front is ok.
+ * second loop pop_back aims to keep deque increasing which means sum[deque.front()] < sum[deque.front()+1];
+ * Suppose sum[j]  > sum[i], j < i, j is already in deque, j = deque.back(), current we are at i,
+ * in this case, we can pop_back j because if later k meet the condition sum[k] - sum[j] >= k, sum[k] - sum[i]
+ * >= k also meet, k - i < k - j, so its safe to pop_back j. this should mak deque increasing.
  */
 #include<iostream>
 #include<vector>
@@ -33,23 +36,19 @@ class Solution {
 	int minSubArrayLen(int s, vector<int>& nums) {
 		deque<int> d;
 		vector<long> sum;
-		int t = 0;
 		int i = 0;
-		int res = -1;
+		int res; 
+		int n = nums.size();
 
-		if (!nums.size()) 
-			return 0;
+		if (!n) 
+			return -1;
 
+		res = n + 1;
 		sum.push_back(nums[0]);
-
-		for(i = 1; i < nums.size(); i++)
+		for(i = 1; i < n; i++)
 			sum.push_back(sum[i-1] + nums[i]);
-		if (sum[i - 1] >= s)
-			res = i;
-		else
-			return 0;
 
-		for (i = 0; i< sum.size(); i++) {
+		for (i = 0; i < n; i++) {
 			if (sum[i] >= s && res > i + 1)
 				res = i + 1;
 				
@@ -64,7 +63,7 @@ class Solution {
 			d.push_back(i);
 		}
 
-		return res;
+		return res <= n ? res : -1;
         }
 };
 
